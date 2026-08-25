@@ -61,9 +61,10 @@
   .shell{max-width:1040px; margin:0 auto; padding:0 20px 80px;}
 
   header.topbar{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  header.topbar::before{content:""; display:block; height:3px; background:linear-gradient(90deg, var(--accent) 0%, var(--accent-strong) 45%, var(--moss) 100%);}
   .topbar-inner{max-width:1040px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   .brand{display:flex; align-items:center; gap:10px;}
-  .brand-mark{width:34px; height:34px; border-radius:9px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; flex:none;}
+  .brand-mark{width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg, var(--accent), var(--accent-strong)); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; flex:none; box-shadow:0 3px 10px -2px color-mix(in srgb, var(--accent) 55%, transparent);}
   .brand-text h1{font-size:1.28rem; font-weight:700; letter-spacing:-0.01em;}
   .brand-text span{display:block; font-size:0.72rem; color:var(--ink-soft); letter-spacing:0.03em;}
 
@@ -71,7 +72,7 @@
   nav.tabs{display:flex; gap:4px;}
   nav.tabs button{background:none; border:none; cursor:pointer; padding:8px 14px; border-radius:999px; color:var(--ink-soft); font-weight:500; font-size:0.92rem; transition:background 0.15s, color 0.15s;}
   nav.tabs button:hover{background:var(--surface); color:var(--ink);}
-  nav.tabs button[aria-selected="true"]{background:var(--ink); color:var(--paper);}
+  nav.tabs button[aria-selected="true"]{background:linear-gradient(120deg, var(--accent), var(--accent-strong)); color:var(--accent-ink); box-shadow:0 3px 10px -3px color-mix(in srgb, var(--accent) 60%, transparent);}
   .user-box{display:flex; align-items:center; gap:8px; font-size:0.86rem; color:var(--ink-soft);}
   .user-box strong{color:var(--ink);}
   @media (max-width:760px){
@@ -101,9 +102,9 @@
   textarea{resize:vertical; min-height:88px; font-family:inherit;}
   .controls .field.grow{flex:1 1 220px;} .controls .field{flex:0 0 auto; min-width:150px;}
 
-  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:10px; border:1px solid transparent; cursor:pointer; padding:9px 16px; font-weight:600; font-size:0.9rem; transition:background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:10px; border:1px solid transparent; cursor:pointer; padding:9px 16px; font-weight:600; font-size:0.9rem; transition:background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s, filter 0.15s;}
   .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--accent); color:var(--accent-ink);} .btn-primary:hover{background:var(--accent-strong);}
+  .btn-primary{background:linear-gradient(120deg, var(--accent), var(--accent-strong)); color:var(--accent-ink); box-shadow:0 3px 10px -3px color-mix(in srgb, var(--accent-strong) 55%, transparent);} .btn-primary:hover{filter:brightness(1.06); box-shadow:0 5px 16px -4px color-mix(in srgb, var(--accent-strong) 65%, transparent);}
   .btn-ghost{background:transparent; border-color:var(--line-strong); color:var(--ink);} .btn-ghost:hover{background:var(--surface);}
   .btn-soft{background:var(--moss-soft); color:var(--moss); border-color:transparent;} .btn-soft:hover{filter:brightness(0.96);}
   .btn-danger{background:transparent; border-color:var(--line-strong); color:var(--bad);} .btn-danger:hover{background:var(--bad-soft); border-color:transparent;}
@@ -115,14 +116,15 @@
   .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-lg);}
   .card-media{position:relative; aspect-ratio:4/3; background:repeating-linear-gradient(45deg, var(--paper-grid) 0 1px, transparent 1px 14px), var(--paper); display:flex; align-items:center; justify-content:center; color:var(--ink-faint);}
   .card-media img{width:100%; height:100%; object-fit:cover; display:block;}
-  .zone-pill{position:absolute; top:10px; left:10px; background:color-mix(in srgb, var(--ink) 78%, transparent); color:var(--paper); font-size:0.72rem; font-weight:600; padding:4px 10px; border-radius:999px; display:flex; align-items:center; gap:4px; max-width:calc(100% - 20px);}
+  .zone-pill{position:absolute; top:10px; left:10px; background:linear-gradient(120deg, var(--accent), var(--accent-strong)); color:var(--accent-ink); font-size:0.72rem; font-weight:700; padding:4px 10px; border-radius:999px; display:flex; align-items:center; gap:4px; max-width:calc(100% - 20px); box-shadow:0 2px 8px -2px color-mix(in srgb, var(--accent-strong) 60%, transparent);}
   .zone-pill span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .status-pill{position:absolute; top:10px; right:10px; font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em;}
   .status-pill.vendido{background:var(--good-soft); color:var(--good);}
   .card-body{padding:14px 14px 16px; display:flex; flex-direction:column; gap:8px; flex:1;}
   .card-body h3{font-size:1.02rem; line-height:1.3;}
-  .card-price{font-size:1.28rem; font-weight:600; color:var(--ink);}
+  .card-price{font-size:1.5rem; font-weight:700; color:var(--accent-strong);}
   .card-desc{color:var(--ink-soft); font-size:0.86rem; line-height:1.45; flex:1; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .card-cuotas{font-size:0.78rem; font-weight:600; color:var(--moss); background:var(--moss-soft); display:inline-flex; padding:3px 9px; border-radius:999px; align-self:flex-start;}
   .card-foot{display:flex; align-items:center; justify-content:space-between; margin-top:4px; gap:8px;}
   .owner-tag{font-size:0.76rem; color:var(--ink-faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 
@@ -196,9 +198,21 @@
   .dialog-price{font-size:1.55rem; font-weight:700; white-space:nowrap;}
   .dialog-desc{color:var(--ink-soft); line-height:1.6; white-space:pre-wrap;}
   .map-box{height:220px; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:var(--paper);}
-  .map-box .leaflet-container{background:var(--paper); font-family:inherit;}
+  .map-box .leaflet-container, .pick-map .leaflet-container{background:var(--paper); font-family:inherit;}
   .map-note{font-size:0.78rem; color:var(--ink-faint); margin:-8px 0 0;}
   .map-pin-wrap{display:flex; align-items:center; justify-content:center; width:30px; height:30px;}
+  .pick-map{height:200px; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:var(--paper); cursor:crosshair;}
+  .pick-map[hidden]{display:none;}
+  .pick-map-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; flex-wrap:wrap;}
+  .checkbox-label{display:flex; align-items:center; gap:8px; font-weight:500; font-size:0.92rem; color:var(--ink); cursor:pointer;}
+  .checkbox-label input{width:16px; height:16px; accent-color:var(--accent);}
+  .cuotas-group{display:flex; flex-wrap:wrap; gap:10px; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:12px; margin-top:-6px;}
+  .cuotas-group .field{flex:1 1 140px;}
+  .cuotas-calc{flex:1 1 100%; display:flex; gap:16px; flex-wrap:wrap; font-size:0.86rem; padding-top:4px; border-top:1px dashed var(--line-strong); margin-top:2px;}
+  .cuotas-calc b{color:var(--ink);}
+  .cuotas-calc .paid{color:var(--good);} .cuotas-calc .left{color:var(--accent-strong);}
+  .cuotas-info{display:flex; gap:16px; flex-wrap:wrap; background:var(--moss-soft); border-radius:12px; padding:12px 14px; font-size:0.86rem; color:var(--ink-soft);}
+  .cuotas-info b{color:var(--ink); font-weight:700;}
   .contact-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
   .contact-row .phone{font-family:"IBM Plex Mono", monospace; font-weight:600;}
   .divider{height:1px; background:var(--line); border:none; margin:2px 0;}
@@ -219,12 +233,13 @@
   .stat-tile .n{font-size:1.5rem; font-weight:700; font-family:"IBM Plex Mono", monospace;}
   .stat-tile .l{font-size:0.76rem; color:var(--ink-soft);}
 
-  .hero{margin-top:18px; border-radius:18px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow); line-height:0;}
+  .hero{margin-top:18px; border-radius:18px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow-lg); line-height:0;}
   .hero svg{display:block; width:100%; height:auto;}
 
   .toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:999px; font-size:0.86rem; font-weight:500; box-shadow:var(--shadow); z-index:80; display:flex; align-items:center; gap:8px; max-width:90vw;}
   .toast[hidden]{display:none;}
   .visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  [hidden]{display:none !important;}
 
   .site-footer{border-top:1px solid var(--line); margin-top:56px; background:var(--surface);}
   .footer-inner{max-width:1040px; margin:0 auto; padding:44px 20px 28px; display:flex; flex-wrap:wrap; gap:40px 56px;}
@@ -274,15 +289,21 @@
         <defs>
           <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" style="stop-color:var(--paper)"/>
-            <stop offset="100%" style="stop-color:var(--accent-soft)"/>
+            <stop offset="55%" style="stop-color:var(--accent-soft)"/>
+            <stop offset="100%" style="stop-color:var(--accent)" stop-opacity="0.35"/>
           </linearGradient>
           <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" style="stop-color:var(--accent-strong)"/>
             <stop offset="100%" style="stop-color:var(--accent)"/>
           </radialGradient>
+          <filter id="sunGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="14" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
         </defs>
         <rect x="0" y="0" width="1200" height="220" fill="url(#skyGrad)"/>
-        <circle cx="960" cy="112" r="58" fill="url(#sunGrad)" opacity="0.9"/>
+        <circle cx="960" cy="112" r="64" fill="url(#sunGrad)" opacity="0.55" filter="url(#sunGlow)"/>
+        <circle cx="960" cy="112" r="58" fill="url(#sunGrad)" opacity="0.95"/>
         <path d="M0,150 C120,110 220,170 360,140 C480,116 560,150 680,132 C820,112 900,150 1040,128 C1120,116 1160,130 1200,120 L1200,220 L0,220 Z" style="fill:var(--moss-soft)"/>
         <path d="M0,175 C140,150 260,190 420,165 C540,146 640,178 780,158 C900,140 1000,172 1200,150 L1200,220 L0,220 Z" style="fill:var(--moss)" opacity="0.55"/>
         <path d="M0,200 C160,182 320,206 480,190 C640,174 760,204 920,188 C1040,176 1120,196 1200,188 L1200,220 L0,220 Z" style="fill:var(--ink)" opacity="0.28"/>
@@ -373,6 +394,7 @@
         <div class="dialog-price num" id="dialogPrice"></div>
       </div>
       <p class="dialog-desc" id="dialogDesc"></p>
+      <div id="dialogCuotas"></div>
       <div class="map-box" id="dialogMap"></div>
       <p class="map-note" id="dialogMapNote"></p>
       <hr class="divider">

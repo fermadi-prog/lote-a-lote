@@ -49,7 +49,10 @@
 
   var ZONES = ["Asunción", "Luque", "San Lorenzo", "Ñemby", "Capiatá", "Itauguá", "Villa Elisa", "Lambaré",
     "Fernando de la Mora", "Mariano Roque Alonso", "Limpio", "San Bernardino", "Encarnación", "Ciudad del Este",
-    "Coronel Oviedo", "Caacupé"];
+    "Coronel Oviedo", "Caacupé",
+    "Concepción", "San Pedro", "Cordillera", "Guairá", "Caaguazú", "Caazapá", "Itapúa", "Misiones",
+    "Paraguarí", "Alto Paraná", "Central", "Ñeembucú", "Amambay", "Canindeyú", "Presidente Hayes",
+    "Boquerón", "Alto Paraguay"];
   var COUNTRIES = [{ code: 'PY', label: 'Paraguay' }, { code: 'AR', label: 'Argentina' }, { code: 'BR', label: 'Brasil' }, { code: 'UY', label: 'Uruguay' }];
   var ZONE_COORDS = {
     'Asunción': [-25.2637, -57.5759], 'Luque': [-25.2699, -57.4854], 'San Lorenzo': [-25.3400, -57.5081],
@@ -57,12 +60,19 @@
     'Villa Elisa': [-25.3667, -57.5975], 'Lambaré': [-25.3467, -57.6067], 'Fernando de la Mora': [-25.3200, -57.5347],
     'Mariano Roque Alonso': [-25.1900, -57.5300], 'Limpio': [-25.1667, -57.4833], 'San Bernardino': [-25.3239, -57.2953],
     'Encarnación': [-27.3306, -55.8664], 'Ciudad del Este': [-25.5097, -54.6111], 'Coronel Oviedo': [-25.4500, -56.4406],
-    'Caacupé': [-25.3861, -57.1400]
+    'Caacupé': [-25.3861, -57.1400],
+    'Concepción': [-23.4064, -57.4340], 'San Pedro': [-24.0667, -57.0833], 'Cordillera': [-25.3167, -57.0333],
+    'Guairá': [-25.7833, -56.4333], 'Caaguazú': [-25.4667, -56.0167], 'Caazapá': [-26.2000, -56.3667],
+    'Itapúa': [-27.3306, -55.8664], 'Misiones': [-27.0667, -56.7167], 'Paraguarí': [-25.6167, -57.1500],
+    'Alto Paraná': [-25.5097, -54.6111], 'Central': [-25.2800, -57.5200], 'Ñeembucú': [-27.0333, -58.2833],
+    'Amambay': [-22.5667, -56.4333], 'Canindeyú': [-24.1500, -55.0333], 'Presidente Hayes': [-24.1333, -59.8333],
+    'Boquerón': [-22.6500, -60.0333], 'Alto Paraguay': [-20.2333, -58.1667]
   };
   var COUNTRY_CENTER = { PY: [-23.4425, -58.4438], AR: [-38.4161, -63.6167], BR: [-14.2350, -51.9253], UY: [-32.5228, -55.7658] };
   function resolveCoords(l) {
-    if (ZONE_COORDS[l.zone]) return { coords: ZONE_COORDS[l.zone], precise: true };
-    return { coords: COUNTRY_CENTER[l.country] || COUNTRY_CENTER.PY, precise: false };
+    if (l.lat != null && l.lng != null) return { coords: [l.lat, l.lng], precise: true, exact: true };
+    if (ZONE_COORDS[l.zone]) return { coords: ZONE_COORDS[l.zone], precise: true, exact: false };
+    return { coords: COUNTRY_CENTER[l.country] || COUNTRY_CENTER.PY, precise: false, exact: false };
   }
   var detailMap = null, detailMarker = null;
   function renderDetailMap(l) {
@@ -80,14 +90,16 @@
         }).addTo(detailMap);
         detailMarker = L.marker(resolved.coords).addTo(detailMap);
       }
-      detailMap.setView(resolved.coords, resolved.precise ? 13 : 6);
+      detailMap.setView(resolved.coords, resolved.exact ? 15 : resolved.precise ? 13 : 6);
       detailMarker.setLatLng(resolved.coords);
       setTimeout(function () { detailMap.invalidateSize(); }, 60);
     } catch (e) { /* map lib unavailable or failed — degrade silently */ }
     if (note) {
-      note.textContent = resolved.precise
-        ? 'Ubicación aproximada de la zona (no es la dirección exacta del lote).'
-        : 'Todavía no tenemos una referencia puntual de "' + l.zone + '" — se muestra el centro de ' + countryLabel(l.country) + '.';
+      note.textContent = resolved.exact
+        ? 'Ubicación marcada por quien publicó el lote.'
+        : resolved.precise
+          ? 'Ubicación aproximada de la zona (no es la dirección exacta del lote).'
+          : 'Todavía no tenemos una referencia puntual de "' + l.zone + '" — se muestra el centro de ' + countryLabel(l.country) + '.';
     }
   }
   var CALL_CODE = { PY: '595', AR: '54', BR: '55', UY: '598' };
@@ -340,12 +352,18 @@
       : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>';
     var statusPill = l.status === 'vendido' ? '<span class="status-pill vendido">Vendido</span>' : '';
     var mineTag = l.isMine ? ' · <em>vos</em>' : '';
+    var cuotasLine = (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null))
+      ? '<div class="card-cuotas">A cuotas: ' + (l.installmentsPaid != null ? l.installmentsPaid : '—') + '/' +
+        ((l.installmentsPaid != null ? l.installmentsPaid : 0) + (l.installmentsLeft != null ? l.installmentsLeft : 0)) +
+        ' pagadas · ' + money(l.installmentAmount, l.currency) + '/cuota</div>'
+      : '';
     return (
       '<button class="card" data-open="' + l.id + '">' +
       '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' + statusPill + '</div>' +
       '<div class="card-body">' +
       '<h3>' + esc(l.title) + '</h3>' +
       '<div class="card-price num">' + money(l.price, l.currency) + '</div>' +
+      cuotasLine +
       '<p class="card-desc">' + esc(l.description) + '</p>' +
       '<div class="card-foot"><span class="owner-tag">' + esc(l.ownerLabel || '—') + mineTag + '</span><span class="btn btn-sm btn-ghost" style="pointer-events:none;">Ver detalle</span></div>' +
       '</div></button>'
@@ -378,8 +396,17 @@
       '<div class="field full"><label for="f-title">Título breve</label><input type="text" id="f-title" maxlength="70" placeholder="Ej: Lote de 300 m² en zona residencial" required></div>' +
       '<div class="field"><label for="f-country">País</label><select id="f-country">' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
       '<div class="field"><label for="f-zone">Zona o ciudad</label><input type="text" id="f-zone" list="zoneOptions" placeholder="Ej: Luque" required><datalist id="zoneOptions">' + ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('') + '</datalist></div>' +
+      '<div class="field full"><label>Ubicación en el mapa (opcional)</label><div class="pick-map" id="pickMap"></div>' +
+      '<div class="pick-map-row"><p class="hint" id="pickMapHint">Hacé clic en el mapa para marcar la ubicación exacta del lote.</p><button type="button" class="btn btn-sm btn-ghost" id="pickMapClear" hidden>Quitar marcador</button></div></div>' +
       '<div class="field full"><label for="f-price">Precio pedido</label><div class="price-row"><input type="number" id="f-price" min="0" step="1" placeholder="8500" required><select id="f-currency"><option value="USD">USD (dólares)</option><option value="PYG">Gs. (guaraníes)</option></select></div></div>' +
       '<div class="field full"><label for="f-phone">Teléfono / WhatsApp</label><input type="tel" id="f-phone" placeholder="0981 123 456" value="' + esc(me.phone || '') + '" required></div>' +
+      '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-cuotas-toggle"> Todavía estoy pagando este lote a cuotas</label></div>' +
+      '<div class="cuotas-group" id="cuotasGroup" hidden>' +
+      '<div class="field"><label for="f-cuotas-pagadas">Cuotas pagadas</label><input type="number" id="f-cuotas-pagadas" min="0" step="1" placeholder="12"></div>' +
+      '<div class="field"><label for="f-cuotas-restantes">Cuotas restantes</label><input type="number" id="f-cuotas-restantes" min="0" step="1" placeholder="24"></div>' +
+      '<div class="field"><label for="f-cuotas-monto">Monto de cada cuota</label><input type="number" id="f-cuotas-monto" min="0" step="1" placeholder="150"></div>' +
+      '<div class="cuotas-calc" id="cuotasCalc" hidden></div>' +
+      '</div>' +
       '<div class="field full"><label for="f-desc">Descripción</label><textarea id="f-desc" placeholder="Superficie, cuotas que faltan, loteadora, servicios, referencias del lugar..." required></textarea></div>' +
       '<div class="field full"><label>Fotos (hasta 2)</label><div class="photo-row" id="photoRow"></div><input type="file" id="photoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
       '</div>' +
@@ -419,6 +446,74 @@
       });
     });
 
+    var cuotasToggle = document.getElementById('f-cuotas-toggle');
+    var cuotasGroup = document.getElementById('cuotasGroup');
+    var cuotasCalc = document.getElementById('cuotasCalc');
+    function updateCuotasCalc() {
+      var paid = Number(document.getElementById('f-cuotas-pagadas').value) || 0;
+      var left = Number(document.getElementById('f-cuotas-restantes').value) || 0;
+      var amt = Number(document.getElementById('f-cuotas-monto').value) || 0;
+      var currency = document.getElementById('f-currency').value;
+      if (amt > 0 && (paid > 0 || left > 0)) {
+        cuotasCalc.hidden = false;
+        cuotasCalc.innerHTML =
+          '<span>Ya invertido: <b class="paid num">' + money(paid * amt, currency) + '</b></span>' +
+          '<span>Resta pagar: <b class="left num">' + money(left * amt, currency) + '</b></span>';
+      } else {
+        cuotasCalc.hidden = true;
+      }
+    }
+    if (cuotasToggle) {
+      cuotasToggle.addEventListener('change', function () { cuotasGroup.hidden = !cuotasToggle.checked; });
+      ['f-cuotas-pagadas', 'f-cuotas-restantes', 'f-cuotas-monto', 'f-currency'].forEach(function (id) {
+        var fieldEl = document.getElementById(id);
+        if (fieldEl) fieldEl.addEventListener('input', updateCuotasCalc);
+      });
+    }
+
+    var pickedLat = null, pickedLng = null, pickMap = null, pickMarker = null;
+    (function initPickMap() {
+      var box = document.getElementById('pickMap');
+      if (!box) return;
+      if (typeof L === 'undefined') { box.hidden = true; return; }
+      function formCoords() {
+        var zoneVal = document.getElementById('f-zone').value.trim();
+        var countryVal = document.getElementById('f-country').value;
+        return ZONE_COORDS[zoneVal] || COUNTRY_CENTER[countryVal] || COUNTRY_CENTER.PY;
+      }
+      try {
+        pickMap = L.map(box, { scrollWheelZoom: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        }).addTo(pickMap);
+        pickMap.setView(formCoords(), 12);
+        setTimeout(function () { pickMap.invalidateSize(); }, 60);
+        pickMap.on('click', function (e) {
+          pickedLat = e.latlng.lat; pickedLng = e.latlng.lng;
+          if (pickMarker) pickMarker.setLatLng(e.latlng); else pickMarker = L.marker(e.latlng).addTo(pickMap);
+          var hint = document.getElementById('pickMapHint');
+          if (hint) hint.textContent = 'Marcador colocado — se va a publicar con esta ubicación exacta.';
+          var clearBtn = document.getElementById('pickMapClear');
+          if (clearBtn) clearBtn.hidden = false;
+        });
+        ['f-country', 'f-zone'].forEach(function (id) {
+          var fieldEl = document.getElementById(id);
+          if (fieldEl) fieldEl.addEventListener('change', function () {
+            if (pickedLat != null) return;
+            pickMap.setView(formCoords(), 12);
+          });
+        });
+        var clearBtn2 = document.getElementById('pickMapClear');
+        if (clearBtn2) clearBtn2.addEventListener('click', function () {
+          pickedLat = null; pickedLng = null;
+          if (pickMarker) { pickMap.removeLayer(pickMarker); pickMarker = null; }
+          var hint = document.getElementById('pickMapHint');
+          if (hint) hint.textContent = 'Hacé clic en el mapa para marcar la ubicación exacta del lote.';
+          clearBtn2.hidden = true;
+        });
+      } catch (e) { box.hidden = true; }
+    })();
+
     document.getElementById('publishForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       var btn = document.getElementById('publishSubmitBtn');
@@ -431,7 +526,12 @@
         currency: document.getElementById('f-currency').value,
         phone: document.getElementById('f-phone').value.trim(),
         description: document.getElementById('f-desc').value.trim(),
-        photos: pendingPhotos.slice()
+        photos: pendingPhotos.slice(),
+        lat: pickedLat,
+        lng: pickedLng,
+        installmentsPaid: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-pagadas').value : null,
+        installmentsLeft: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-restantes').value : null,
+        installmentAmount: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-monto').value : null
       };
       btn.disabled = true;
       try {
@@ -668,6 +768,24 @@
     document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
     document.getElementById('dialogPrice').textContent = money(l.price, l.currency);
     document.getElementById('dialogDesc').textContent = l.description;
+    var cuotasBox = document.getElementById('dialogCuotas');
+    if (cuotasBox) {
+      if (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null)) {
+        var paidN = l.installmentsPaid || 0, leftN = l.installmentsLeft || 0;
+        cuotasBox.hidden = false;
+        cuotasBox.innerHTML =
+          '<div class="cuotas-info">' +
+          '<span>Cuotas pagadas: <b>' + paidN + '</b></span>' +
+          '<span>Cuotas restantes: <b>' + leftN + '</b></span>' +
+          '<span>Monto de cuota: <b class="num">' + money(l.installmentAmount, l.currency) + '</b></span>' +
+          '<span>Ya invertido: <b class="num">' + money(paidN * l.installmentAmount, l.currency) + '</b></span>' +
+          '<span>Resta pagar: <b class="num">' + money(leftN * l.installmentAmount, l.currency) + '</b></span>' +
+          '</div>';
+      } else {
+        cuotasBox.hidden = true;
+        cuotasBox.innerHTML = '';
+      }
+    }
     renderDetailMap(l);
 
     var digits = (l.phone || '').replace(/\D/g, '');
