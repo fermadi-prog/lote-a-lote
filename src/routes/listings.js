@@ -21,6 +21,11 @@ function serialize(row, viewerId) {
     description: row.description,
     photos: row.photos || [],
     status: row.status,
+    lat: row.lat != null ? Number(row.lat) : null,
+    lng: row.lng != null ? Number(row.lng) : null,
+    installmentsPaid: row.installments_paid != null ? Number(row.installments_paid) : null,
+    installmentsLeft: row.installments_left != null ? Number(row.installments_left) : null,
+    installmentAmount: row.installment_amount != null ? Number(row.installment_amount) : null,
     createdAt: row.created_at,
     isMine: viewerId ? row.owner_id === viewerId : false
   };
@@ -78,6 +83,26 @@ router.post('/', requireAuth, async (req, res) => {
   const currency = b.currency === 'PYG' ? 'PYG' : 'USD';
   const price = Number(b.price);
   const photos = Array.isArray(b.photos) ? b.photos.slice(0, MAX_PHOTOS) : [];
+  let lat = null, lng = null;
+  if (b.lat != null && b.lng != null && b.lat !== '' && b.lng !== '') {
+    const latNum = Number(b.lat), lngNum = Number(b.lng);
+    if (Number.isFinite(latNum) && Number.isFinite(lngNum) && Math.abs(latNum) <= 90 && Math.abs(lngNum) <= 180) {
+      lat = latNum; lng = lngNum;
+    }
+  }
+  function positiveIntOrNull(v) {
+    if (v == null || v === '') return null;
+    const n = Number(v);
+    return (Number.isFinite(n) && n >= 0) ? Math.round(n) : null;
+  }
+  function positiveNumOrNull(v) {
+    if (v == null || v === '') return null;
+    const n = Number(v);
+    return (Number.isFinite(n) && n >= 0) ? n : null;
+  }
+  const installmentsPaid = positiveIntOrNull(b.installmentsPaid);
+  const installmentsLeft = positiveIntOrNull(b.installmentsLeft);
+  const installmentAmount = positiveNumOrNull(b.installmentAmount);
 
   if (!title || !zone || !description || !phone || !(price > 0)) {
     return res.status(400).json({ error: 'datos_incompletos', message: 'Completá título, zona, precio, teléfono y descripción.' });
@@ -89,9 +114,9 @@ router.post('/', requireAuth, async (req, res) => {
   }
 
   const { rows } = await pool.query(
-    `INSERT INTO listings (owner_id, title, country, zone, price, currency, phone, description, photos)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
-    [req.user.id, title, country, zone, price, currency, phone, description, JSON.stringify(photos)]
+    `INSERT INTO listings (owner_id, title, country, zone, price, currency, phone, description, photos, lat, lng, installments_paid, installments_left, installment_amount)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
+    [req.user.id, title, country, zone, price, currency, phone, description, JSON.stringify(photos), lat, lng, installmentsPaid, installmentsLeft, installmentAmount]
   );
   res.status(201).json({ listing: serialize({ ...rows[0], owner_label: req.user.display_name }, req.user.id) });
 });
