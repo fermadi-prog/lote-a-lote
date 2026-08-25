@@ -33,6 +33,8 @@ function serialize(row, viewerId) {
       ? (row.purchase_start_date instanceof Date ? row.purchase_start_date.toISOString().slice(0, 10) : row.purchase_start_date)
       : null,
     commissionAcceptedAt: row.commission_accepted_at || null,
+    featured: !!(row.featured_until && new Date(row.featured_until) > new Date()),
+    featuredUntil: row.featured_until || null,
     createdAt: row.created_at,
     isMine: viewerId ? row.owner_id === viewerId : false
   };
@@ -51,7 +53,8 @@ router.get('/', async (req, res) => {
     clauses.push(`(l.title ILIKE $${params.length} OR l.zone ILIKE $${params.length} OR l.description ILIKE $${params.length})`);
   }
   const where = clauses.length ? 'WHERE ' + clauses.join(' AND ') : '';
-  const order = sort === 'menor' ? 'l.price ASC' : sort === 'mayor' ? 'l.price DESC' : 'l.created_at DESC';
+  const baseOrder = sort === 'menor' ? 'l.price ASC' : sort === 'mayor' ? 'l.price DESC' : 'l.created_at DESC';
+  const order = `(l.featured_until IS NOT NULL AND l.featured_until > now()) DESC, ${baseOrder}`;
   const { rows } = await pool.query(
     `SELECT l.*, u.display_name AS owner_label
      FROM listings l JOIN users u ON u.id = l.owner_id

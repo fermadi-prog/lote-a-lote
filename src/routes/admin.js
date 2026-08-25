@@ -33,4 +33,27 @@ router.get('/users', async (req, res) => {
   });
 });
 
+// PATCH /api/admin/listings/:id/feature  { days } to feature for N days, or { clear: true } to unfeature.
+router.patch('/listings/:id/feature', async (req, res) => {
+  const b = req.body || {};
+  if (b.clear) {
+    const { rows } = await pool.query(
+      'UPDATE listings SET featured_until = NULL WHERE id = $1 RETURNING id',
+      [req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
+    return res.json({ featuredUntil: null });
+  }
+  const days = Number(b.days);
+  if (!Number.isFinite(days) || days <= 0 || days > 90) {
+    return res.status(400).json({ error: 'dias_invalido', message: 'Elegí una cantidad de días válida (1 a 90).' });
+  }
+  const { rows } = await pool.query(
+    `UPDATE listings SET featured_until = now() + make_interval(days => $1::int) WHERE id = $2 RETURNING featured_until`,
+    [Math.round(days), req.params.id]
+  );
+  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
+  res.json({ featuredUntil: rows[0].featured_until });
+});
+
 module.exports = router;
