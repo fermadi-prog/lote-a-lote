@@ -37,14 +37,14 @@ async function loadOffer(id) {
 // POST /api/offers  { listingId, amount, message }
 router.post('/', requireAuth, async (req, res) => {
   const listingId = req.body && req.body.listingId;
-  if (!listingId) return res.status(400).json({ error: 'datos_incompletos', message: 'Falta indicar el lote.' });
+  if (!listingId) return res.status(400).json({ error: 'datos_incompletos', message: 'Falta indicar la propiedad.' });
   const listing = await loadListing(listingId);
-  if (!listing) return res.status(404).json({ error: 'no_encontrado', message: 'Ese lote ya no existe.' });
+  if (!listing) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
   if (listing.owner_id === req.user.id) {
-    return res.status(400).json({ error: 'propio_lote', message: 'No podés ofertar por tu propio lote.' });
+    return res.status(400).json({ error: 'propio_lote', message: 'No podés ofertar por tu propia publicación.' });
   }
   if (listing.status === 'vendido') {
-    return res.status(400).json({ error: 'ya_vendido', message: 'Ese lote ya fue marcado como vendido.' });
+    return res.status(400).json({ error: 'ya_vendido', message: 'Esa propiedad ya fue marcada como vendida.' });
   }
   const type = (req.body && req.body.type === 'trueque') ? 'trueque' : 'efectivo';
   const message = ((req.body && req.body.message) || '').trim().slice(0, 500);
@@ -53,7 +53,7 @@ router.post('/', requireAuth, async (req, res) => {
   if (type === 'trueque') {
     description = ((req.body && req.body.description) || '').trim().slice(0, 300);
     if (!description) {
-      return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otro terreno).' });
+      return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otra propiedad).' });
     }
   } else {
     amount = Number(req.body && req.body.amount);
@@ -67,7 +67,7 @@ router.post('/', requireAuth, async (req, res) => {
     [listing.id, req.user.id, ACTIVE_STATUSES]
   );
   if (existing.rows.length) {
-    return res.status(409).json({ error: 'oferta_activa', message: 'Ya tenés una oferta activa por este lote.' });
+    return res.status(409).json({ error: 'oferta_activa', message: 'Ya tenés una oferta activa por esta propiedad.' });
   }
 
   const bids = [{ by: 'comprador', type, amount, description, message, ts: Date.now() }];
@@ -131,7 +131,7 @@ router.post('/:id/bids', requireAuth, async (req, res) => {
   let description = null;
   if (type === 'trueque') {
     description = ((req.body && req.body.description) || '').trim().slice(0, 300);
-    if (!description) return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otro terreno).' });
+    if (!description) return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otra propiedad).' });
   } else {
     amount = Number(req.body && req.body.amount);
     if (!(amount > 0)) return res.status(400).json({ error: 'monto_invalido', message: 'Ingresá un monto válido.' });

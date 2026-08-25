@@ -4,6 +4,7 @@ const { requireAuth } = require('../auth');
 
 const router = express.Router();
 const COUNTRIES = ['PY', 'AR', 'BR', 'UY'];
+const PROPERTY_TYPES = ['terreno', 'casa', 'departamento', 'estancia'];
 const MAX_PHOTOS = 4;
 const MAX_PHOTO_CHARS = 400000; // ~400KB of base64 per photo, generous ceiling for a compressed jpeg
 
@@ -13,6 +14,7 @@ function serialize(row, viewerId) {
     ownerId: row.owner_id,
     ownerLabel: row.owner_label || row.display_name,
     title: row.title,
+    propertyType: row.property_type || 'terreno',
     country: row.country,
     zone: row.zone,
     price: Number(row.price),
@@ -36,13 +38,14 @@ function serialize(row, viewerId) {
   };
 }
 
-// GET /api/listings?country=&zone=&q=&sort=
+// GET /api/listings?country=&zone=&tipo=&q=&sort=
 router.get('/', async (req, res) => {
-  const { country, zone, q, sort } = req.query;
+  const { country, zone, tipo, q, sort } = req.query;
   const clauses = [];
   const params = [];
   if (country) { params.push(country); clauses.push(`l.country = $${params.length}`); }
   if (zone) { params.push(zone); clauses.push(`l.zone = $${params.length}`); }
+  if (tipo && PROPERTY_TYPES.includes(tipo)) { params.push(tipo); clauses.push(`l.property_type = $${params.length}`); }
   if (q) {
     params.push('%' + q + '%');
     clauses.push(`(l.title ILIKE $${params.length} OR l.zone ILIKE $${params.length} OR l.description ILIKE $${params.length})`);
@@ -74,7 +77,7 @@ router.get('/:id', async (req, res) => {
      FROM listings l JOIN users u ON u.id = l.owner_id WHERE l.id = $1`,
     [req.params.id]
   );
-  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Ese lote ya no existe.' });
+  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
   res.json({ listing: serialize(rows[0], req.user && req.user.id) });
 });
 
@@ -93,6 +96,7 @@ function positiveNumOrNull(v) {
 // Returns { ok:false, error, message } on failure, or { ok:true, ...fields }.
 function parseListingBody(b) {
   const title = (b.title || '').trim();
+  const propertyType = PROPERTY_TYPES.includes(b.propertyType) ? b.propertyType : 'terreno';
   const zone = (b.zone || '').trim();
   const description = (b.description || '').trim();
   const phone = (b.phone || '').trim();
@@ -126,7 +130,7 @@ function parseListingBody(b) {
     }
   }
   return {
-    ok: true, title, zone, description, phone, country, currency, price, photos, lat, lng,
+    ok: true, title, propertyType, zone, description, phone, country, currency, price, photos, lat, lng,
     installmentsPaid, installmentsLeft, installmentAmount, totalPaid, purchaseStartDate
   };
 }
@@ -135,23 +139,23 @@ router.post('/', requireAuth, async (req, res) => {
   const parsed = parseListingBody(req.body || {});
   if (!parsed.ok) return res.status(400).json({ error: parsed.error, message: parsed.message });
   if (req.body.acceptedTerms !== true) {
-    return res.status(400).json({ error: 'terminos_no_aceptados', message: 'Tenés que aceptar la condición de la comisión del 5% para publicar.' });
+    return res.status(400).json({ error: 'terminos_no_aceptados', message: 'Tenés que aceptar la condición de la comisión del 5% sobre la venta cerrada para publicar.' });
   }
 
   const { rows } = await pool.query(
-    `INSERT INTO listings (owner_id, title, country, zone, price, currency, phone, description, photos, lat, lng, installments_paid, installments_left, installment_amount, total_paid, purchase_start_date, commission_accepted_at)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16, now()) RETURNING *`,
-    [req.user.id, parsed.title, parsed.country, parsed.zone, parsed.price, parsed.currency, parsed.phone, parsed.description, JSON.stringify(parsed.photos), parsed.lat, parsed.lng, parsed.installmentsPaid, parsed.installmentsLeft, parsed.installmentAmount, parsed.totalPaid, parsed.purchaseStartDate]
+    `INSERT INTO listings (owner_id, title, property_type, country, zone, price, currency, phone, description, photos, lat, lng, installments_paid, installments_left, installment_amount, total_paid, purchase_start_date, commission_accepted_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17, now()) RETURNING *`,
+    [req.user.id, parsed.title, parsed.propertyType, parsed.country, parsed.zone, parsed.price, parsed.currency, parsed.phone, parsed.description, JSON.stringify(parsed.photos), parsed.lat, parsed.lng, parsed.installmentsPaid, parsed.installmentsLeft, parsed.installmentAmount, parsed.totalPaid, parsed.purchaseStartDate]
   );
   res.status(201).json({ listing: serialize({ ...rows[0], owner_label: req.user.display_name }, req.user.id) });
 });
 
 router.patch('/:id', requireAuth, async (req, res) => {
   const { rows } = await pool.query('SELECT * FROM listings WHERE id = $1', [req.params.id]);
-  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Ese lote ya no existe.' });
+  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
   const listing = rows[0];
   if (listing.owner_id !== req.user.id && !req.user.is_admin) {
-    return res.status(403).json({ error: 'no_autorizado', message: 'Solo el dueño del lote (o un administrador) puede editarlo.' });
+    return res.status(403).json({ error: 'no_autorizado', message: 'Solo el dueño de la publicación (o un administrador) puede editarla.' });
   }
   const b = req.body || {};
   const isFullEdit = Object.prototype.hasOwnProperty.call(b, 'title');
@@ -174,11 +178,11 @@ router.patch('/:id', requireAuth, async (req, res) => {
   const status = ['activo', 'vendido'].includes(b.status) ? b.status : null;
 
   await pool.query(
-    `UPDATE listings SET title=$1, country=$2, zone=$3, price=$4, currency=$5, phone=$6, description=$7, photos=$8,
-       lat=$9, lng=$10, installments_paid=$11, installments_left=$12, installment_amount=$13, total_paid=$14,
-       purchase_start_date=$15, status=COALESCE($16, status)
-     WHERE id = $17`,
-    [parsed.title, parsed.country, parsed.zone, parsed.price, parsed.currency, parsed.phone, parsed.description, JSON.stringify(parsed.photos),
+    `UPDATE listings SET title=$1, property_type=$2, country=$3, zone=$4, price=$5, currency=$6, phone=$7, description=$8, photos=$9,
+       lat=$10, lng=$11, installments_paid=$12, installments_left=$13, installment_amount=$14, total_paid=$15,
+       purchase_start_date=$16, status=COALESCE($17, status)
+     WHERE id = $18`,
+    [parsed.title, parsed.propertyType, parsed.country, parsed.zone, parsed.price, parsed.currency, parsed.phone, parsed.description, JSON.stringify(parsed.photos),
       parsed.lat, parsed.lng, parsed.installmentsPaid, parsed.installmentsLeft, parsed.installmentAmount, parsed.totalPaid,
       parsed.purchaseStartDate, status, req.params.id]
   );
@@ -191,9 +195,9 @@ router.patch('/:id', requireAuth, async (req, res) => {
 
 router.delete('/:id', requireAuth, async (req, res) => {
   const { rows } = await pool.query('SELECT * FROM listings WHERE id = $1', [req.params.id]);
-  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Ese lote ya no existe.' });
+  if (!rows.length) return res.status(404).json({ error: 'no_encontrado', message: 'Esa publicación ya no existe.' });
   if (rows[0].owner_id !== req.user.id && !req.user.is_admin) {
-    return res.status(403).json({ error: 'no_autorizado', message: 'Solo el dueño del lote (o un administrador) puede eliminarlo.' });
+    return res.status(403).json({ error: 'no_autorizado', message: 'Solo el dueño de la publicación (o un administrador) puede eliminarla.' });
   }
   await pool.query('DELETE FROM listings WHERE id = $1', [req.params.id]);
   res.json({ ok: true });
