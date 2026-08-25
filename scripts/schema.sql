@@ -42,6 +42,8 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installments_paid INTEGER;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installments_left INTEGER;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installment_amount NUMERIC;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS total_paid NUMERIC;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS purchase_start_date DATE;
 
 CREATE INDEX IF NOT EXISTS idx_listings_owner ON listings(owner_id);
 CREATE INDEX IF NOT EXISTS idx_listings_country_zone ON listings(country, zone);
