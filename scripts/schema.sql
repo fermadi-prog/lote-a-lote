@@ -55,9 +55,11 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS installment_amount NUMERIC;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS total_paid NUMERIC;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS purchase_start_date DATE;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS commission_accepted_at TIMESTAMPTZ;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS property_type TEXT NOT NULL DEFAULT 'terreno';
 
 CREATE INDEX IF NOT EXISTS idx_listings_owner ON listings(owner_id);
 CREATE INDEX IF NOT EXISTS idx_listings_country_zone ON listings(country, zone);
+CREATE INDEX IF NOT EXISTS idx_listings_property_type ON listings(property_type);
 CREATE INDEX IF NOT EXISTS idx_offers_listing ON offers(listing_id);
 CREATE INDEX IF NOT EXISTS idx_offers_buyer ON offers(buyer_id);
 CREATE INDEX IF NOT EXISTS idx_messages_sender ON messages(sender_id);
