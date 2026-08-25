@@ -46,10 +46,20 @@ router.post('/', requireAuth, async (req, res) => {
   if (listing.status === 'vendido') {
     return res.status(400).json({ error: 'ya_vendido', message: 'Ese lote ya fue marcado como vendido.' });
   }
-  const amount = Number(req.body && req.body.amount);
+  const type = (req.body && req.body.type === 'trueque') ? 'trueque' : 'efectivo';
   const message = ((req.body && req.body.message) || '').trim().slice(0, 500);
-  if (!(amount > 0)) {
-    return res.status(400).json({ error: 'monto_invalido', message: 'Ingresá un monto de oferta válido.' });
+  let amount = null;
+  let description = null;
+  if (type === 'trueque') {
+    description = ((req.body && req.body.description) || '').trim().slice(0, 300);
+    if (!description) {
+      return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otro terreno).' });
+    }
+  } else {
+    amount = Number(req.body && req.body.amount);
+    if (!(amount > 0)) {
+      return res.status(400).json({ error: 'monto_invalido', message: 'Ingresá un monto de oferta válido.' });
+    }
   }
 
   const existing = await pool.query(
@@ -60,7 +70,7 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(409).json({ error: 'oferta_activa', message: 'Ya tenés una oferta activa por este lote.' });
   }
 
-  const bids = [{ by: 'comprador', amount, message, ts: Date.now() }];
+  const bids = [{ by: 'comprador', type, amount, description, message, ts: Date.now() }];
   const { rows } = await pool.query(
     `INSERT INTO offers (listing_id, buyer_id, status, bids) VALUES ($1,$2,'pendiente',$3) RETURNING *`,
     [listing.id, req.user.id, JSON.stringify(bids)]
@@ -115,11 +125,19 @@ router.post('/:id/bids', requireAuth, async (req, res) => {
   const myTurn = (last.by === 'comprador' && isSeller) || (last.by === 'vendedor' && isBuyer);
   if (!myTurn) return res.status(400).json({ error: 'no_es_tu_turno', message: 'Estás esperando la respuesta de la otra persona.' });
 
-  const amount = Number(req.body && req.body.amount);
+  const type = (req.body && req.body.type === 'trueque') ? 'trueque' : 'efectivo';
   const message = ((req.body && req.body.message) || '').trim().slice(0, 500);
-  if (!(amount > 0)) return res.status(400).json({ error: 'monto_invalido', message: 'Ingresá un monto válido.' });
+  let amount = null;
+  let description = null;
+  if (type === 'trueque') {
+    description = ((req.body && req.body.description) || '').trim().slice(0, 300);
+    if (!description) return res.status(400).json({ error: 'descripcion_invalida', message: 'Contá qué ofrecés a cambio (ej: un vehículo, otro terreno).' });
+  } else {
+    amount = Number(req.body && req.body.amount);
+    if (!(amount > 0)) return res.status(400).json({ error: 'monto_invalido', message: 'Ingresá un monto válido.' });
+  }
 
-  const bids = offer.bids.concat([{ by: isSeller ? 'vendedor' : 'comprador', amount, message, ts: Date.now() }]);
+  const bids = offer.bids.concat([{ by: isSeller ? 'vendedor' : 'comprador', type, amount, description, message, ts: Date.now() }]);
   const { rows } = await pool.query(
     `UPDATE offers SET bids = $1, status = 'contraoferta', updated_at = now() WHERE id = $2 RETURNING *`,
     [JSON.stringify(bids), offer.id]
