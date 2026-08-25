@@ -283,7 +283,7 @@
   }
 
   /* ---------------- Image compression ---------------- */
-  var MAX_PHOTOS = 2;
+  var MAX_PHOTOS = 4;
   function compressImage(file, cb) {
     var reader = new FileReader();
     reader.onload = function (ev) {
@@ -405,10 +405,13 @@
       '<div class="field"><label for="f-cuotas-pagadas">Cuotas pagadas</label><input type="number" id="f-cuotas-pagadas" min="0" step="1" placeholder="12"></div>' +
       '<div class="field"><label for="f-cuotas-restantes">Cuotas restantes</label><input type="number" id="f-cuotas-restantes" min="0" step="1" placeholder="24"></div>' +
       '<div class="field"><label for="f-cuotas-monto">Monto de cada cuota</label><input type="number" id="f-cuotas-monto" min="0" step="1" placeholder="150"></div>' +
+      '<p class="hint" style="flex:1 1 100%; margin:-4px 0 0;">Poné el monto que pagabas al inicio de la compra — algunas loteadoras lo van ajustando con el tiempo, así que puede no ser el monto actual.</p>' +
+      '<div class="field"><label for="f-cuotas-fecha">Fecha de inicio de compra</label><input type="date" id="f-cuotas-fecha"></div>' +
+      '<div class="field"><label for="f-cuotas-total">Total abonado hasta hoy (opcional)</label><input type="number" id="f-cuotas-total" min="0" step="1" placeholder="Si pagaste montos extra, además de las cuotas"></div>' +
       '<div class="cuotas-calc" id="cuotasCalc" hidden></div>' +
       '</div>' +
       '<div class="field full"><label for="f-desc">Descripción</label><textarea id="f-desc" placeholder="Superficie, cuotas que faltan, loteadora, servicios, referencias del lugar..." required></textarea></div>' +
-      '<div class="field full"><label>Fotos (hasta 2)</label><div class="photo-row" id="photoRow"></div><input type="file" id="photoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
+      '<div class="field full"><label>Fotos (hasta 4)</label><div class="photo-row" id="photoRow"></div><input type="file" id="photoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
       '</div>' +
       '<div style="margin-top:16px;"><button type="submit" class="btn btn-primary" id="publishSubmitBtn">Publicar terreno</button></div>' +
       '<div id="publishMsg"></div>' +
@@ -453,11 +456,13 @@
       var paid = Number(document.getElementById('f-cuotas-pagadas').value) || 0;
       var left = Number(document.getElementById('f-cuotas-restantes').value) || 0;
       var amt = Number(document.getElementById('f-cuotas-monto').value) || 0;
+      var totalAbonado = Number(document.getElementById('f-cuotas-total').value) || 0;
       var currency = document.getElementById('f-currency').value;
-      if (amt > 0 && (paid > 0 || left > 0)) {
+      var invertido = totalAbonado > 0 ? totalAbonado : paid * amt;
+      if (amt > 0 && (paid > 0 || left > 0 || totalAbonado > 0)) {
         cuotasCalc.hidden = false;
         cuotasCalc.innerHTML =
-          '<span>Ya invertido: <b class="paid num">' + money(paid * amt, currency) + '</b></span>' +
+          '<span>Ya invertido: <b class="paid num">' + money(invertido, currency) + '</b></span>' +
           '<span>Resta pagar: <b class="left num">' + money(left * amt, currency) + '</b></span>';
       } else {
         cuotasCalc.hidden = true;
@@ -465,7 +470,7 @@
     }
     if (cuotasToggle) {
       cuotasToggle.addEventListener('change', function () { cuotasGroup.hidden = !cuotasToggle.checked; });
-      ['f-cuotas-pagadas', 'f-cuotas-restantes', 'f-cuotas-monto', 'f-currency'].forEach(function (id) {
+      ['f-cuotas-pagadas', 'f-cuotas-restantes', 'f-cuotas-monto', 'f-cuotas-total', 'f-currency'].forEach(function (id) {
         var fieldEl = document.getElementById(id);
         if (fieldEl) fieldEl.addEventListener('input', updateCuotasCalc);
       });
@@ -531,7 +536,9 @@
         lng: pickedLng,
         installmentsPaid: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-pagadas').value : null,
         installmentsLeft: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-restantes').value : null,
-        installmentAmount: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-monto').value : null
+        installmentAmount: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-monto').value : null,
+        totalPaid: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-total').value : null,
+        purchaseStartDate: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-fecha').value : null
       };
       btn.disabled = true;
       try {
@@ -772,13 +779,16 @@
     if (cuotasBox) {
       if (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null)) {
         var paidN = l.installmentsPaid || 0, leftN = l.installmentsLeft || 0;
+        var invertidoN = l.totalPaid != null ? l.totalPaid : paidN * l.installmentAmount;
+        var fechaLine = l.purchaseStartDate ? '<span>Inicio de compra: <b>' + esc(l.purchaseStartDate.split('-').reverse().join('/')) + '</b></span>' : '';
         cuotasBox.hidden = false;
         cuotasBox.innerHTML =
           '<div class="cuotas-info">' +
           '<span>Cuotas pagadas: <b>' + paidN + '</b></span>' +
           '<span>Cuotas restantes: <b>' + leftN + '</b></span>' +
-          '<span>Monto de cuota: <b class="num">' + money(l.installmentAmount, l.currency) + '</b></span>' +
-          '<span>Ya invertido: <b class="num">' + money(paidN * l.installmentAmount, l.currency) + '</b></span>' +
+          '<span>Monto de cuota (al inicio): <b class="num">' + money(l.installmentAmount, l.currency) + '</b></span>' +
+          fechaLine +
+          '<span>Ya invertido: <b class="num">' + money(invertidoN, l.currency) + '</b></span>' +
           '<span>Resta pagar: <b class="num">' + money(leftN * l.installmentAmount, l.currency) + '</b></span>' +
           '</div>';
       } else {
