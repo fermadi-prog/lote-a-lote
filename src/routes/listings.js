@@ -35,6 +35,9 @@ function serialize(row, viewerId) {
     commissionAcceptedAt: row.commission_accepted_at || null,
     featured: !!(row.featured_until && new Date(row.featured_until) > new Date()),
     featuredUntil: row.featured_until || null,
+    verified: !!row.verified_at,
+    verifiedAt: row.verified_at || null,
+    ownerIsAgency: !!(row.owner_agency_until && new Date(row.owner_agency_until) > new Date()),
     createdAt: row.created_at,
     isMine: viewerId ? row.owner_id === viewerId : false
   };
@@ -56,7 +59,7 @@ router.get('/', async (req, res) => {
   const baseOrder = sort === 'menor' ? 'l.price ASC' : sort === 'mayor' ? 'l.price DESC' : 'l.created_at DESC';
   const order = `(l.featured_until IS NOT NULL AND l.featured_until > now()) DESC, ${baseOrder}`;
   const { rows } = await pool.query(
-    `SELECT l.*, u.display_name AS owner_label
+    `SELECT l.*, u.display_name AS owner_label, u.account_type AS owner_account_type, u.agency_until AS owner_agency_until
      FROM listings l JOIN users u ON u.id = l.owner_id
      ${where} ORDER BY ${order} LIMIT 300`,
     params
@@ -66,7 +69,7 @@ router.get('/', async (req, res) => {
 
 router.get('/mine', requireAuth, async (req, res) => {
   const { rows } = await pool.query(
-    `SELECT l.*, u.display_name AS owner_label
+    `SELECT l.*, u.display_name AS owner_label, u.account_type AS owner_account_type, u.agency_until AS owner_agency_until
      FROM listings l JOIN users u ON u.id = l.owner_id
      WHERE l.owner_id = $1 ORDER BY l.created_at DESC`,
     [req.user.id]
@@ -76,7 +79,7 @@ router.get('/mine', requireAuth, async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { rows } = await pool.query(
-    `SELECT l.*, u.display_name AS owner_label
+    `SELECT l.*, u.display_name AS owner_label, u.account_type AS owner_account_type, u.agency_until AS owner_agency_until
      FROM listings l JOIN users u ON u.id = l.owner_id WHERE l.id = $1`,
     [req.params.id]
   );
@@ -150,7 +153,12 @@ router.post('/', requireAuth, async (req, res) => {
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17, now()) RETURNING *`,
     [req.user.id, parsed.title, parsed.propertyType, parsed.country, parsed.zone, parsed.price, parsed.currency, parsed.phone, parsed.description, JSON.stringify(parsed.photos), parsed.lat, parsed.lng, parsed.installmentsPaid, parsed.installmentsLeft, parsed.installmentAmount, parsed.totalPaid, parsed.purchaseStartDate]
   );
-  res.status(201).json({ listing: serialize({ ...rows[0], owner_label: req.user.display_name }, req.user.id) });
+  res.status(201).json({
+    listing: serialize({
+      ...rows[0], owner_label: req.user.display_name,
+      owner_account_type: req.user.account_type, owner_agency_until: req.user.agency_until
+    }, req.user.id)
+  });
 });
 
 router.patch('/:id', requireAuth, async (req, res) => {
@@ -190,7 +198,8 @@ router.patch('/:id', requireAuth, async (req, res) => {
       parsed.purchaseStartDate, status, req.params.id]
   );
   const { rows: updated } = await pool.query(
-    `SELECT l.*, u.display_name AS owner_label FROM listings l JOIN users u ON u.id = l.owner_id WHERE l.id = $1`,
+    `SELECT l.*, u.display_name AS owner_label, u.account_type AS owner_account_type, u.agency_until AS owner_agency_until
+     FROM listings l JOIN users u ON u.id = l.owner_id WHERE l.id = $1`,
     [req.params.id]
   );
   res.json({ listing: serialize(updated[0], req.user.id) });

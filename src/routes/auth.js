@@ -6,7 +6,11 @@ const { setAuthCookie, clearAuthCookie } = require('../auth');
 const router = express.Router();
 
 function publicUser(u) {
-  return { id: u.id, email: u.email, displayName: u.display_name, phone: u.phone, isAdmin: u.is_admin };
+  return {
+    id: u.id, email: u.email, displayName: u.display_name, phone: u.phone, isAdmin: u.is_admin,
+    isAgency: !!(u.agency_until && new Date(u.agency_until) > new Date()),
+    agencyUntil: u.agency_until || null
+  };
 }
 
 router.post('/register', async (req, res) => {
