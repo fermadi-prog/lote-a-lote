@@ -1552,19 +1552,28 @@
   }
 
   /* ---------------- Panel lateral (costados) ---------------- */
+  var exchangeRateCache = null; // { pygPerUsd } | 'error' | null (not fetched yet)
+  function fetchExchangeRate() {
+    if (exchangeRateCache) return Promise.resolve(exchangeRateCache);
+    return fetch('https://open.er-api.com/v6/latest/USD')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        exchangeRateCache = (data && data.rates && data.rates.PYG) ? { pygPerUsd: data.rates.PYG } : 'error';
+        return exchangeRateCache;
+      })
+      .catch(function () { exchangeRateCache = 'error'; return exchangeRateCache; });
+  }
   function renderRateWidget() {
     var box = document.getElementById('rateWidget');
     if (!box) return;
-    api('GET', '/api/exchange-rate').then(function (data) {
+    fetchExchangeRate().then(function (rate) {
       box = document.getElementById('rateWidget');
-      if (!box || !data || !data.rate) return;
-      box.innerHTML = '<h4>Cotización del día</h4>' +
-        '<div class="rate">Gs. ' + numFmt.format(Math.round(data.rate.venta)) + '</div>' +
-        '<p class="rate-note">Compra ' + numFmt.format(Math.round(data.rate.compra)) + ' · Venta ' + numFmt.format(Math.round(data.rate.venta)) + '</p>' +
-        '<p class="rate-note">Fuente: Cambios Chaco' + (data.stale ? ' (último valor disponible)' : '') + '</p>';
-    }).catch(function () {
-      box = document.getElementById('rateWidget');
-      if (box) box.innerHTML = '<h4>Cotización del día</h4><p class="side-widget-empty">No se pudo cargar la cotización ahora mismo.</p>';
+      if (!box) return;
+      if (rate === 'error') {
+        box.innerHTML = '<h4>Cotización del día</h4><p class="side-widget-empty">No se pudo cargar la cotización ahora mismo.</p>';
+        return;
+      }
+      box.innerHTML = '<h4>Cotización del día</h4><div class="rate">1 USD ≈ ' + numFmt.format(Math.round(rate.pygPerUsd)) + ' Gs.</div><p class="rate-note">Referencial · fuente externa</p>';
     });
   }
   async function renderZonePricesWidget() {
