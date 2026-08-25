@@ -37,6 +37,16 @@ CREATE TABLE IF NOT EXISTS offers (
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS messages (
+  id            SERIAL PRIMARY KEY,
+  listing_id    INTEGER REFERENCES listings(id) ON DELETE SET NULL,
+  sender_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  recipient_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body          TEXT NOT NULL,
+  read_at       TIMESTAMPTZ,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installments_paid INTEGER;
@@ -44,8 +54,11 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS installments_left INTEGER;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installment_amount NUMERIC;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS total_paid NUMERIC;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS purchase_start_date DATE;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS commission_accepted_at TIMESTAMPTZ;
 
 CREATE INDEX IF NOT EXISTS idx_listings_owner ON listings(owner_id);
 CREATE INDEX IF NOT EXISTS idx_listings_country_zone ON listings(country, zone);
 CREATE INDEX IF NOT EXISTS idx_offers_listing ON offers(listing_id);
 CREATE INDEX IF NOT EXISTS idx_offers_buyer ON offers(buyer_id);
+CREATE INDEX IF NOT EXISTS idx_messages_sender ON messages(sender_id);
+CREATE INDEX IF NOT EXISTS idx_messages_recipient ON messages(recipient_id, read_at);
