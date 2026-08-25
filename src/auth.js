@@ -30,7 +30,7 @@ async function attachUser(req, res, next) {
     if (!token) return next();
     const payload = jwt.verify(token, SECRET);
     const { rows } = await pool.query(
-      'SELECT id, email, display_name, phone, is_admin FROM users WHERE id = $1',
+      'SELECT id, email, display_name, phone, is_admin, account_type, agency_until FROM users WHERE id = $1',
       [payload.uid]
     );
     if (rows.length) req.user = rows[0];
