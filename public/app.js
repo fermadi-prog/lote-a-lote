@@ -459,7 +459,10 @@
     var last = offer.bids[offer.bids.length - 1];
     var viewerIsBuyer = offer.dir === 'enviaste';
     var bubbles = offer.bids.map(function (b) {
-      return '<div class="bubble ' + b.by + '"><div class="amt num">' + money(b.amount, l.currency) + '</div>' +
+      var amtHtml = b.type === 'trueque'
+        ? '<div class="amt" style="font-size:0.92rem; font-weight:500;"><span class="badge trueque">Trueque</span>' + esc(b.description || '') + '</div>'
+        : '<div class="amt num">' + money(b.amount, l.currency) + '</div>';
+      return '<div class="bubble ' + b.by + '">' + amtHtml +
         (b.message ? '<div class="msg">' + esc(b.message) + '</div>' : '') +
         '<span class="ts">' + bidAuthorLabel(offer, b, viewerIsBuyer) + ' · ' + timeAgo(b.ts) + '</span></div>';
     }).join('');
@@ -477,7 +480,9 @@
           '<button class="btn btn-sm btn-ghost" data-counter-toggle="' + offer.id + '">Contraofertar</button>' +
           '</div>' +
           '<div class="counter-form" id="counter-' + offer.id + '" hidden>' +
-          '<div class="field"><label>Nuevo monto (' + (l.currency === 'PYG' ? 'Gs.' : 'USD') + ')</label><input type="number" min="0" class="counter-amount" data-for="' + offer.id + '" value="' + Math.round(last.amount) + '"></div>' +
+          '<div class="field" style="flex:0 0 130px;"><label>Tipo</label><select class="counter-type" data-for="' + offer.id + '"><option value="efectivo"' + (last.type === 'trueque' ? '' : ' selected') + '>Efectivo</option><option value="trueque"' + (last.type === 'trueque' ? ' selected' : '') + '>Trueque</option></select></div>' +
+          '<div class="field counter-amount-field" data-for="' + offer.id + '"' + (last.type === 'trueque' ? ' hidden' : '') + '><label>Nuevo monto (' + (l.currency === 'PYG' ? 'Gs.' : 'USD') + ')</label><input type="number" min="0" class="counter-amount" data-for="' + offer.id + '" value="' + Math.round(last.amount || 0) + '"></div>' +
+          '<div class="field counter-desc-field" data-for="' + offer.id + '" style="flex:1 1 180px;"' + (last.type === 'trueque' ? '' : ' hidden') + '><label>¿Qué ofrecés?</label><input type="text" class="counter-desc" data-for="' + offer.id + '" placeholder="Ej: Toyota Hilux 2015" value="' + (last.type === 'trueque' ? esc(last.description || '') : '') + '"></div>' +
           '<div class="field" style="flex:1 1 160px;"><label>Mensaje (opcional)</label><input type="text" class="counter-msg" data-for="' + offer.id + '" placeholder="Ej: acepto si incluís..."></div>' +
           '<button class="btn btn-sm btn-primary" data-counter-send="' + offer.id + '">Enviar</button>' +
           '</div>';
@@ -500,6 +505,16 @@
   }
 
   function bindOfferActions(container, afterAction) {
+    container.onchange = function (e) {
+      var sel = e.target.closest('.counter-type');
+      if (!sel) return;
+      var oid = sel.getAttribute('data-for');
+      var isTrueque = sel.value === 'trueque';
+      var amtField = container.querySelector('.counter-amount-field[data-for="' + oid + '"]');
+      var descField = container.querySelector('.counter-desc-field[data-for="' + oid + '"]');
+      if (amtField) amtField.hidden = isTrueque;
+      if (descField) descField.hidden = !isTrueque;
+    };
     container.onclick = async function (e) {
       var open = e.target.closest('[data-open]');
       var acc = e.target.closest('[data-accept]');
@@ -515,10 +530,20 @@
         else if (togg) { var box = document.getElementById('counter-' + togg.getAttribute('data-counter-toggle')); if (box) box.hidden = !box.hidden; }
         else if (send) {
           var oid = send.getAttribute('data-counter-send');
-          var amt = Number(container.querySelector('.counter-amount[data-for="' + oid + '"]').value);
+          var typeSel = container.querySelector('.counter-type[data-for="' + oid + '"]');
+          var type = (typeSel && typeSel.value === 'trueque') ? 'trueque' : 'efectivo';
           var msg = container.querySelector('.counter-msg[data-for="' + oid + '"]').value.trim();
-          if (!(amt > 0)) return;
-          await api('POST', '/api/offers/' + oid + '/bids', { amount: amt, message: msg });
+          var payload = { type: type, message: msg };
+          if (type === 'trueque') {
+            var desc = container.querySelector('.counter-desc[data-for="' + oid + '"]').value.trim();
+            if (!desc) return;
+            payload.description = desc;
+          } else {
+            var amt = Number(container.querySelector('.counter-amount[data-for="' + oid + '"]').value);
+            if (!(amt > 0)) return;
+            payload.amount = amt;
+          }
+          await api('POST', '/api/offers/' + oid + '/bids', payload);
           showToast('Enviaste una contraoferta.');
           afterAction();
         }
@@ -646,16 +671,32 @@
       var currLabel = l.currency === 'PYG' ? 'Gs.' : 'USD';
       el.dialogActionArea.innerHTML =
         '<div class="offer-form">' +
-        '<div class="field"><label for="dOfferAmount">Tu oferta (' + currLabel + ')</label><input type="number" id="dOfferAmount" min="0" placeholder="' + Math.round(l.price * 0.9) + '"></div>' +
+        '<div class="field" style="flex:0 0 140px;"><label for="dOfferType">Tipo de oferta</label><select id="dOfferType"><option value="efectivo">Efectivo</option><option value="trueque">Trueque</option></select></div>' +
+        '<div class="field" id="dOfferAmountField"><label for="dOfferAmount">Tu oferta (' + currLabel + ')</label><input type="number" id="dOfferAmount" min="0" placeholder="' + Math.round(l.price * 0.9) + '"></div>' +
+        '<div class="field" id="dOfferDescField" style="flex:1 1 200px;" hidden><label for="dOfferDesc">¿Qué ofrecés a cambio?</label><input type="text" id="dOfferDesc" placeholder="Ej: Toyota Hilux 2015, u otro terreno"></div>' +
         '<div class="field" style="flex:2 1 200px;"><label for="dOfferMsg">Mensaje (opcional)</label><input type="text" id="dOfferMsg" placeholder="Contale al vendedor tu propuesta"></div>' +
         '<button class="btn btn-primary" id="dOfferSend" ' + (l.status === 'vendido' ? 'disabled' : '') + '>Ofertar</button>' +
         '</div>';
+      document.getElementById('dOfferType').addEventListener('change', function () {
+        var isTrueque = this.value === 'trueque';
+        document.getElementById('dOfferAmountField').hidden = isTrueque;
+        document.getElementById('dOfferDescField').hidden = !isTrueque;
+      });
       document.getElementById('dOfferSend').addEventListener('click', async function () {
-        var amt = Number(document.getElementById('dOfferAmount').value);
-        if (!(amt > 0)) return;
+        var type = document.getElementById('dOfferType').value;
         var msg = document.getElementById('dOfferMsg').value.trim();
+        var payload = { listingId: l.id, type: type, message: msg };
+        if (type === 'trueque') {
+          var desc = document.getElementById('dOfferDesc').value.trim();
+          if (!desc) return;
+          payload.description = desc;
+        } else {
+          var amt = Number(document.getElementById('dOfferAmount').value);
+          if (!(amt > 0)) return;
+          payload.amount = amt;
+        }
         try {
-          await api('POST', '/api/offers', { listingId: l.id, amount: amt, message: msg });
+          await api('POST', '/api/offers', payload);
           showToast('Enviaste tu oferta por "' + l.title + '".');
           renderDetail();
           loadOffersFeedIfVisible();
