@@ -62,6 +62,16 @@ CREATE TABLE IF NOT EXISTS services (
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS zone_prices (
+  id              SERIAL PRIMARY KEY,
+  zone            TEXT NOT NULL,
+  country         TEXT NOT NULL DEFAULT 'PY',
+  price_per_m2    NUMERIC NOT NULL,
+  currency        TEXT NOT NULL DEFAULT 'USD',
+  note            TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS installments_paid INTEGER;
@@ -87,3 +97,4 @@ CREATE INDEX IF NOT EXISTS idx_messages_recipient ON messages(recipient_id, read
 CREATE INDEX IF NOT EXISTS idx_services_owner ON services(owner_id);
 CREATE INDEX IF NOT EXISTS idx_services_category ON services(category);
 CREATE INDEX IF NOT EXISTS idx_services_country_zone ON services(country, zone);
+CREATE INDEX IF NOT EXISTS idx_zone_prices_country_zone ON zone_prices(country, zone);
