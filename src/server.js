@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const listingsRoutes = require('./routes/listings');
 const offersRoutes = require('./routes/offers');
 const adminRoutes = require('./routes/admin');
+const messagesRoutes = require('./routes/messages');
 
 const app = express();
 app.use(express.json({ limit: '8mb' })); // photos travel as base64 in the JSON body
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/listings', listingsRoutes);
 app.use('/api/offers', offersRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/messages', messagesRoutes);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 // Catch-all for client-side routes / a fresh load of any path: serve the SPA shell.
