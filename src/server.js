@@ -12,7 +12,7 @@ const offersRoutes = require('./routes/offers');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-app.use(express.json({ limit: '4mb' })); // photos travel as base64 in the JSON body
+app.use(express.json({ limit: '8mb' })); // photos travel as base64 in the JSON body
 app.use(cookieParser());
 app.use(attachUser);
 
