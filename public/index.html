@@ -59,6 +59,7 @@
   @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
 
   .shell{max-width:1040px; margin:0 auto; padding:0 20px 80px;}
+  @media (min-width:1480px){ .shell, .topbar-inner, .footer-inner, .footer-bottom{max-width:880px;} }
 
   header.topbar{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
   header.topbar::before{content:""; display:block; height:3px; background:linear-gradient(90deg, var(--accent) 0%, var(--accent-strong) 45%, var(--moss) 100%);}
@@ -283,8 +284,8 @@
   .cta-banner.small h3{font-size:0.9rem;}
   .cta-banner.small p{font-size:0.8rem;}
 
-  .side-rail{display:none; position:fixed; top:150px; right:max(16px, calc(50% - 816px)); width:264px; flex-direction:column; gap:14px; z-index:5; max-height:calc(100vh - 170px); overflow-y:auto; padding-bottom:8px;}
-  @media (min-width:1700px){ .side-rail:not([hidden]){display:flex;} }
+  .side-rail{display:none; position:fixed; top:150px; right:max(16px, calc(50% - 724px)); width:264px; flex-direction:column; gap:14px; z-index:5; max-height:calc(100vh - 170px); overflow-y:auto; padding-bottom:8px;}
+  @media (min-width:1480px){ .side-rail:not([hidden]){display:flex;} }
   .side-widget{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow);}
   .side-widget h4{font-size:0.82rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:6px;}
   .side-widget p{font-size:0.82rem; color:var(--ink-soft); line-height:1.5; margin:0;}
