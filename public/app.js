@@ -51,6 +51,45 @@
     "Fernando de la Mora", "Mariano Roque Alonso", "Limpio", "San Bernardino", "Encarnación", "Ciudad del Este",
     "Coronel Oviedo", "Caacupé"];
   var COUNTRIES = [{ code: 'PY', label: 'Paraguay' }, { code: 'AR', label: 'Argentina' }, { code: 'BR', label: 'Brasil' }, { code: 'UY', label: 'Uruguay' }];
+  var ZONE_COORDS = {
+    'Asunción': [-25.2637, -57.5759], 'Luque': [-25.2699, -57.4854], 'San Lorenzo': [-25.3400, -57.5081],
+    'Ñemby': [-25.3958, -57.5347], 'Capiatá': [-25.3556, -57.4453], 'Itauguá': [-25.3958, -57.3561],
+    'Villa Elisa': [-25.3667, -57.5975], 'Lambaré': [-25.3467, -57.6067], 'Fernando de la Mora': [-25.3200, -57.5347],
+    'Mariano Roque Alonso': [-25.1900, -57.5300], 'Limpio': [-25.1667, -57.4833], 'San Bernardino': [-25.3239, -57.2953],
+    'Encarnación': [-27.3306, -55.8664], 'Ciudad del Este': [-25.5097, -54.6111], 'Coronel Oviedo': [-25.4500, -56.4406],
+    'Caacupé': [-25.3861, -57.1400]
+  };
+  var COUNTRY_CENTER = { PY: [-23.4425, -58.4438], AR: [-38.4161, -63.6167], BR: [-14.2350, -51.9253], UY: [-32.5228, -55.7658] };
+  function resolveCoords(l) {
+    if (ZONE_COORDS[l.zone]) return { coords: ZONE_COORDS[l.zone], precise: true };
+    return { coords: COUNTRY_CENTER[l.country] || COUNTRY_CENTER.PY, precise: false };
+  }
+  var detailMap = null, detailMarker = null;
+  function renderDetailMap(l) {
+    var box = document.getElementById('dialogMap');
+    var note = document.getElementById('dialogMapNote');
+    if (!box) return;
+    if (typeof L === 'undefined') { box.hidden = true; if (note) note.textContent = ''; return; }
+    box.hidden = false;
+    var resolved = resolveCoords(l);
+    try {
+      if (!detailMap) {
+        detailMap = L.map(box, { attributionControl: true, scrollWheelZoom: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        }).addTo(detailMap);
+        detailMarker = L.marker(resolved.coords).addTo(detailMap);
+      }
+      detailMap.setView(resolved.coords, resolved.precise ? 13 : 6);
+      detailMarker.setLatLng(resolved.coords);
+      setTimeout(function () { detailMap.invalidateSize(); }, 60);
+    } catch (e) { /* map lib unavailable or failed — degrade silently */ }
+    if (note) {
+      note.textContent = resolved.precise
+        ? 'Ubicación aproximada de la zona (no es la dirección exacta del lote).'
+        : 'Todavía no tenemos una referencia puntual de "' + l.zone + '" — se muestra el centro de ' + countryLabel(l.country) + '.';
+    }
+  }
   var CALL_CODE = { PY: '595', AR: '54', BR: '55', UY: '598' };
   function countryLabel(code) {
     for (var i = 0; i < COUNTRIES.length; i++) if (COUNTRIES[i].code === code) return COUNTRIES[i].label;
@@ -629,6 +668,7 @@
     document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
     document.getElementById('dialogPrice').textContent = money(l.price, l.currency);
     document.getElementById('dialogDesc').textContent = l.description;
+    renderDetailMap(l);
 
     var digits = (l.phone || '').replace(/\D/g, '');
     var code = CALL_CODE[l.country] || '595';
@@ -763,5 +803,16 @@
 
   /* ---------------- Init ---------------- */
   updateAuthMode();
+  /* ---------------- Footer ---------------- */
+  var footerYearEl = document.getElementById('footerYear');
+  if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+  document.querySelectorAll('[data-footer-tab]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      switchTab(a.getAttribute('data-footer-tab'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
   refreshMe().then(function () { switchTab('explorar'); });
 })();

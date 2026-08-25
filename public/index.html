@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
   :root{
     --paper:#F6F5F0; --paper-grid:#E7E3D6; --surface:#FFFFFF; --ink:#1E2A24;
@@ -16,6 +18,7 @@
     --moss:#4C6B4A; --moss-soft:#E4ECE1; --good:#3F7D4F; --good-soft:#E1EEE3;
     --warn:#96691E; --warn-soft:#F3E7D2; --bad:#AA3B2C; --bad-soft:#F5E1DC;
     --shadow: 0 1px 2px rgba(30,42,36,0.06), 0 8px 24px -12px rgba(30,42,36,0.18);
+    --shadow-lg: 0 4px 10px rgba(30,42,36,0.08), 0 20px 38px -16px rgba(30,42,36,0.30);
     --radius: 14px;
   }
   @media (prefers-color-scheme: dark){
@@ -26,6 +29,7 @@
       --moss:#8FB37D; --moss-soft:#213222; --good:#79C48A; --good-soft:#1D3122;
       --warn:#E0B45C; --warn-soft:#33291a; --bad:#E38672; --bad-soft:#37241f;
       --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+      --shadow-lg: 0 4px 10px rgba(0,0,0,0.35), 0 22px 40px -16px rgba(0,0,0,0.7);
     }
   }
   :root[data-theme="dark"]{
@@ -35,6 +39,7 @@
     --moss:#8FB37D; --moss-soft:#213222; --good:#79C48A; --good-soft:#1D3122;
     --warn:#E0B45C; --warn-soft:#33291a; --bad:#E38672; --bad-soft:#37241f;
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+    --shadow-lg: 0 4px 10px rgba(0,0,0,0.35), 0 22px 40px -16px rgba(0,0,0,0.7);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -107,7 +112,7 @@
 
   .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:16px;}
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column; cursor:pointer; text-align:left; padding:0; color:inherit; width:100%; transition:transform 0.15s, box-shadow 0.15s;}
-  .card:hover{transform:translateY(-2px);}
+  .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-lg);}
   .card-media{position:relative; aspect-ratio:4/3; background:repeating-linear-gradient(45deg, var(--paper-grid) 0 1px, transparent 1px 14px), var(--paper); display:flex; align-items:center; justify-content:center; color:var(--ink-faint);}
   .card-media img{width:100%; height:100%; object-fit:cover; display:block;}
   .zone-pill{position:absolute; top:10px; left:10px; background:color-mix(in srgb, var(--ink) 78%, transparent); color:var(--paper); font-size:0.72rem; font-weight:600; padding:4px 10px; border-radius:999px; display:flex; align-items:center; gap:4px; max-width:calc(100% - 20px);}
@@ -190,6 +195,10 @@
   .dialog-zone{display:flex; align-items:center; gap:5px; color:var(--ink-soft); font-size:0.86rem; margin-top:4px;}
   .dialog-price{font-size:1.55rem; font-weight:700; white-space:nowrap;}
   .dialog-desc{color:var(--ink-soft); line-height:1.6; white-space:pre-wrap;}
+  .map-box{height:220px; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:var(--paper);}
+  .map-box .leaflet-container{background:var(--paper); font-family:inherit;}
+  .map-note{font-size:0.78rem; color:var(--ink-faint); margin:-8px 0 0;}
+  .map-pin-wrap{display:flex; align-items:center; justify-content:center; width:30px; height:30px;}
   .contact-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
   .contact-row .phone{font-family:"IBM Plex Mono", monospace; font-weight:600;}
   .divider{height:1px; background:var(--line); border:none; margin:2px 0;}
@@ -216,6 +225,20 @@
   .toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:999px; font-size:0.86rem; font-weight:500; box-shadow:var(--shadow); z-index:80; display:flex; align-items:center; gap:8px; max-width:90vw;}
   .toast[hidden]{display:none;}
   .visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+
+  .site-footer{border-top:1px solid var(--line); margin-top:56px; background:var(--surface);}
+  .footer-inner{max-width:1040px; margin:0 auto; padding:44px 20px 28px; display:flex; flex-wrap:wrap; gap:40px 56px;}
+  .footer-brand{flex:1 1 220px; display:flex; flex-direction:column; gap:10px;}
+  .footer-brand .brand{gap:9px;}
+  .footer-brand p{color:var(--ink-soft); font-size:0.86rem; line-height:1.55; margin:0; max-width:280px;}
+  .footer-col{flex:0 1 160px; display:flex; flex-direction:column; gap:9px;}
+  .footer-col h4{font-size:0.76rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint); font-weight:600; margin:0 0 2px;}
+  .footer-col a{color:var(--ink-soft); font-size:0.88rem; text-decoration:none;}
+  .footer-col a:hover{color:var(--accent); text-decoration:underline;}
+  .footer-bottom{border-top:1px solid var(--line); max-width:1040px; margin:0 auto; padding:16px 20px 28px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; font-size:0.78rem; color:var(--ink-faint);}
+  .footer-sig{display:inline-flex; align-items:center; gap:6px; color:var(--ink-faint); font-weight:600; letter-spacing:0.03em;}
+  .footer-sig a{color:var(--ink-soft); text-decoration:none; border-bottom:1px solid var(--line-strong);}
+  .footer-sig a:hover{color:var(--accent); border-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -305,6 +328,36 @@
   </section>
 </div>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 3 7v3c0 6.5 4 10.5 9 12 5-1.5 9-5.5 9-12V7l-9-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12.5l2 2 4-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div class="brand-text"><h1 style="font-size:1.05rem;">Lote a Lote</h1></div>
+      </div>
+      <p>Marketplace de terrenos: contado, a cuotas o en trueque. Publicá tu lote u ofertá por el que te interese, sin intermediarios.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explorar</h4>
+      <a href="#" data-footer-tab="explorar">Buscar terrenos</a>
+      <a href="#" data-footer-tab="publicar">Publicar un lote</a>
+      <a href="#" data-footer-tab="ofertas">Mis ofertas</a>
+    </div>
+    <div class="footer-col">
+      <h4>Países</h4>
+      <span style="font-size:0.88rem; color:var(--ink-soft);">Paraguay</span>
+      <span style="font-size:0.88rem; color:var(--ink-soft);">Argentina</span>
+      <span style="font-size:0.88rem; color:var(--ink-soft);">Brasil · Uruguay</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <span id="footerYear"></span> Lote a Lote. Todos los lotes son publicados por sus propios dueños.</span>
+    <span class="footer-sig">BY <a href="https://fermadi.com.py" target="_blank" rel="noopener">FERMADI</a></span>
+  </div>
+</footer>
+
 <!-- ================= DETALLE (overlay) ================= -->
 <div class="overlay-bg" id="overlayBg" hidden>
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" id="dialogEl">
@@ -320,6 +373,8 @@
         <div class="dialog-price num" id="dialogPrice"></div>
       </div>
       <p class="dialog-desc" id="dialogDesc"></p>
+      <div class="map-box" id="dialogMap"></div>
+      <p class="map-note" id="dialogMapNote"></p>
       <hr class="divider">
       <div class="contact-row" id="dialogContact"></div>
       <div id="dialogActionArea"></div>
