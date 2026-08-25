@@ -40,6 +40,9 @@
     if (d < 30) return 'hace ' + d + ' d';
     return new Date(ts).toLocaleDateString('es-PY');
   }
+  function starIcon() {
+    return '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7-5.4-4.7 7.1-.6L12 2.5Z"/></svg>';
+  }
   function pinIcon() {
     return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-1px"><path d="M12 21s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>';
   }
@@ -375,6 +378,7 @@
       ? '<img src="' + photo + '" alt="">'
       : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>';
     var statusPill = l.status === 'vendido' ? '<span class="status-pill vendido">Vendido</span>' : '';
+    var featuredPill = l.featured ? '<span class="featured-pill">' + starIcon() + ' Destacado</span>' : '';
     var typePill = '<span class="type-pill">' + esc(propertyTypeLabel(l.propertyType)) + '</span>';
     var mineTag = l.isMine ? ' · <em>vos</em>' : '';
     var cuotasLine = (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null))
@@ -383,8 +387,9 @@
         ' pagadas · ' + money(l.installmentAmount, l.currency) + '/cuota</div>'
       : '';
     return (
-      '<button class="card" data-open="' + l.id + '">' +
-      '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' + statusPill + typePill + '</div>' +
+      '<button class="card' + (l.featured ? ' featured' : '') + '" data-open="' + l.id + '">' +
+      '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' +
+      '<span class="card-badges-right">' + featuredPill + statusPill + '</span>' + typePill + '</div>' +
       '<div class="card-body">' +
       '<h3>' + esc(l.title) + '</h3>' +
       '<div class="card-price num">' + money(l.price, l.currency) + '</div>' +
@@ -627,12 +632,16 @@
       empty.hidden = data.listings.length !== 0;
       list.innerHTML = data.listings.map(function (l) {
         var thumb = l.photos && l.photos[0] ? '<img src="' + l.photos[0] + '" alt="">' : pinIcon();
+        var featuredLine = l.featured
+          ? '<span class="featured-tag" style="margin-left:0;">' + starIcon() + ' Destacado hasta ' + new Date(l.featuredUntil).toLocaleDateString('es-PY') + '</span>'
+          : '<a href="mailto:comercial@fermadi.com.py?subject=Destacar%20publicaci%C3%B3n%20' + encodeURIComponent(l.title) + '" style="font-size:0.78rem; color:var(--accent-strong);">¿Querés que aparezca primero? Destacala →</a>';
         return (
           '<div class="mini-row">' +
           '<div class="mini-thumb">' + thumb + '</div>' +
           '<div class="mini-info"><h4>' + esc(l.title) + '</h4><div class="mini-meta">' +
           '<span class="num">' + money(l.price, l.currency) + '</span><span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span>' +
-          '<span class="badge ' + l.status + '">' + (l.status === 'vendido' ? 'Vendido' : 'Activo') + '</span></div></div>' +
+          '<span class="badge ' + l.status + '">' + (l.status === 'vendido' ? 'Vendido' : 'Activo') + '</span></div>' +
+          '<div style="margin-top:4px;">' + featuredLine + '</div></div>' +
           '<div class="mini-actions">' +
           '<button class="btn btn-sm btn-ghost" data-open="' + l.id + '">Ver</button>' +
           '<button class="btn btn-sm btn-ghost" data-edit="' + l.id + '">Editar</button>' +
@@ -863,7 +872,7 @@
     if (openListingId !== l.id) return; // stale
     renderDetailMedia(l);
     document.getElementById('dialogTitle').textContent = l.title;
-    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '<span class="type-tag">' + esc(propertyTypeLabel(l.propertyType)) + '</span>' + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
+    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '<span class="type-tag">' + esc(propertyTypeLabel(l.propertyType)) + '</span>' + (l.featured ? '<span class="featured-tag">' + starIcon() + ' Destacado</span>' : '') + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
     document.getElementById('dialogPrice').textContent = money(l.price, l.currency);
     document.getElementById('dialogDesc').textContent = l.description;
     var cuotasBox = document.getElementById('dialogCuotas');
@@ -1135,13 +1144,22 @@
 
       var listingsData = await api('GET', '/api/listings?sort=recientes');
       el.adminListings.innerHTML = listingsData.listings.map(function (l) {
+        var featuredLine = l.featured
+          ? '<span class="featured-tag" style="margin-left:0;">' + starIcon() + ' Destacado hasta ' + new Date(l.featuredUntil).toLocaleDateString('es-PY') + '</span>'
+          : '';
         return (
           '<div class="mini-row">' +
           '<div class="mini-thumb">' + (l.photos && l.photos[0] ? '<img src="' + l.photos[0] + '" alt="">' : pinIcon()) + '</div>' +
           '<div class="mini-info"><h4>' + esc(l.title) + '</h4><div class="mini-meta">' +
           '<span class="num">' + money(l.price, l.currency) + '</span><span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span>' +
           '<span>por ' + esc(l.ownerLabel) + '</span>' +
-          '<span class="badge ' + l.status + '">' + (l.status === 'vendido' ? 'Vendido' : 'Activo') + '</span></div></div>' +
+          '<span class="badge ' + l.status + '">' + (l.status === 'vendido' ? 'Vendido' : 'Activo') + '</span></div>' +
+          '<div style="margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' + featuredLine +
+          '<select class="feature-days" data-for="' + l.id + '" style="width:auto; padding:3px 6px; font-size:0.78rem;">' +
+          '<option value="7">Destacar 7 días</option><option value="15">Destacar 15 días</option><option value="30">Destacar 30 días</option></select>' +
+          '<button class="btn btn-sm btn-soft" data-feature="' + l.id + '">Aplicar</button>' +
+          (l.featured ? '<button class="btn btn-sm btn-ghost" data-unfeature="' + l.id + '">Quitar destacado</button>' : '') +
+          '</div></div>' +
           '<div class="mini-actions">' +
           '<button class="btn btn-sm btn-ghost" data-open="' + l.id + '">Ver</button>' +
           '<button class="btn btn-sm btn-danger" data-admin-delete="' + l.id + '">Eliminar</button>' +
@@ -1151,9 +1169,22 @@
       el.adminListings.onclick = async function (e) {
         var open = e.target.closest('[data-open]');
         var del = e.target.closest('[data-admin-delete]');
+        var feat = e.target.closest('[data-feature]');
+        var unfeat = e.target.closest('[data-unfeature]');
         if (open) { openDetail(Number(open.getAttribute('data-open'))); return; }
         if (del) {
           try { await api('DELETE', '/api/listings/' + del.getAttribute('data-admin-delete')); showToast('Lote eliminado.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+          return;
+        }
+        if (feat) {
+          var id = feat.getAttribute('data-feature');
+          var sel = el.adminListings.querySelector('.feature-days[data-for="' + id + '"]');
+          var days = Number(sel ? sel.value : 7);
+          try { await api('PATCH', '/api/admin/listings/' + id + '/feature', { days: days }); showToast('Publicación destacada por ' + days + ' días.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+          return;
+        }
+        if (unfeat) {
+          try { await api('PATCH', '/api/admin/listings/' + unfeat.getAttribute('data-unfeature') + '/feature', { clear: true }); showToast('Se quitó el destacado.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
         }
       };
     } catch (err) {
