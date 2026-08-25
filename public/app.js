@@ -47,12 +47,7 @@
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.5 3h3l1.5 4.5-2 1.7a12 12 0 0 0 5.8 5.8l1.7-2 4.5 1.5v3c0 1-.9 1.8-1.9 1.7C10.8 18.9 5.1 13.2 4.8 5.9 4.7 4.9 5.5 4 6.5 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   }
 
-  var ZONES = ["Asunción", "Luque", "San Lorenzo", "Ñemby", "Capiatá", "Itauguá", "Villa Elisa", "Lambaré",
-    "Fernando de la Mora", "Mariano Roque Alonso", "Limpio", "San Bernardino", "Encarnación", "Ciudad del Este",
-    "Coronel Oviedo", "Caacupé",
-    "Concepción", "San Pedro", "Cordillera", "Guairá", "Caaguazú", "Caazapá", "Itapúa", "Misiones",
-    "Paraguarí", "Alto Paraná", "Central", "Ñeembucú", "Amambay", "Canindeyú", "Presidente Hayes",
-    "Boquerón", "Alto Paraguay"];
+  var ZONES = ["Asunción", "Concepción", "Belén", "Horqueta", "Loreto", "San Carlos", "San Lázaro", "Yvy Ya'ú", "Azotey", "Sgto. José Félix López", "San Alfredo", "Paso Barreto", "San Pedro del Ykuamandiyu", "Antequera", "Choré", "General Elizardo Aquino", "Itacurubí del Rosario", "Lima", "Nueva Germania", "San Estanislao", "San Pablo", "Tacuatí", "Unión", "25 de Diciembre", "Villa del Rosario", "General Resquín", "Yataity del Norte", "Guajayví", "Capiibary", "Santa Rosa del Aguaray", "Yryvu Cuá", "Liberación", "Caacupé", "Altos", "Arroyos y Esteros", "Atyra", "Caraguatay", "Emboscada", "Eusebio Ayala", "Isla Pucú", "Itacurubí de la Cordillera", "Juan de Mena", "Loma Grande", "Mbocayaty del Yhaguy", "Nueva Colombia", "Piribebuy", "Primero de Marzo", "San Bernardino", "Santa Elena", "Tobatí", "Valenzuela", "San José Obrero", "Villarrica", "Borja", "Mauricio José Troche", "Coronel Martínez", "Félix Pérez Cardozo", "General Eugenio A. Garay", "Colonia Independencia", "Itapé", "Iturbe", "José Fassardi", "Mbocayaty", "Natalicio Talavera", "Ñumi", "San Salvador", "Yataity", "Dr. Bottrell", "Paso Yobaí", "Tebicuary", "Coronel Oviedo", "Caaguazú", "Carayao", "Cecilio Báez", "Santa Rosa del Mbutuy", "Dr. Juan Manuel Frutos", "Repatriación", "Nueva Londres", "San Joaquín", "San José de los Arroyos", "Yhú", "J Eulogio Estigarribia", "R.I. 3 Corrales", "Raúl Arsenio Oviedo", "José Domingo Ocampos", "Mcal. Francisco Solano López", "La Pastora", "3 de Febrero", "Simón Bolívar", "Vaquería", "Tembiapora", "Nueva Toledo", "Caazapá", "Abaí", "Buena Vista", "Moisés Bertoni", "General Higinio Morínigo", "Maciel", "San Juan Nepomuceno", "Tavai", "Fulgencio Yegros", "Yutí", "3 de Mayo", "Encarnación", "Bella Vista", "Cambyreta", "Capitán Meza", "Capitán Miranda", "Nueva Alborada", "Carmen del Paraná", "Coronel Bogado", "Carlos Antonio López", "Natalio", "Fram", "General Artigas", "General Delgado", "Hohenau", "Jesús", "Leandro Oviedo", "Obligado", "Mayor Otaño", "San Cosme y Damián", "San Pedro del Paraná", "San Rafael del Paraná", "Trinidad", "Edelira", "Tomás Romero Pereira", "Alto Vera", "La Paz", "Yatytay", "San Juan del Paraná", "Pirapo", "Itapúa Poty", "San Juan Bautista", "Ayolas", "San Ignacio", "San Miguel", "San Patricio", "Santa María", "Santa Rosa", "Santiago", "Villa Florida", "Yabebyry", "Paraguarí", "Acahay", "Caapucú", "General Bernardino Caballero", "Carapeguá", "Escobar", "La Colmena", "Mbuyapey", "Pirayú", "Quiindy", "Quyquyho", "San Roque González", "Sapucaí", "Tebicuary-mí", "Yaguarón", "Ybycuí", "Yvytimí", "Ciudad del Este", "Presidente Franco", "Domingo Martínez de Irala", "Dr. Juan León Mallorquín", "Hernandarias", "Itakyrý", "Juan E. O'Leary", "Ñacunday", "Yguazú", "Los Cedrales", "Minga Guazú", "San Cristóbal", "Santa Rita", "Naranjal", "Santa Rosa del Monday", "Minga Pora", "Mbaracayú", "San Alberto", "Iruña", "Santa Fe del Paraná", "Tavapy", "Dr. Raúl Peña", "Areguá", "Capiatá", "Fernando de la Mora", "Guarambaré", "Itá", "Itauguá", "Lambaré", "Limpio", "Luque", "Mariano Roque Alonso", "Nueva Italia", "Ñemby", "San Antonio", "San Lorenzo", "Villa Elisa", "Villeta", "Ypacaraí", "Ypané", "J Augusto Saldivar", "Pilar", "Alberdi", "Cerrito", "Desmochados", "General Díaz", "Guazú Cuá", "Humaitá", "Isla Umbú", "Los Laureles", "Mayor Martínez", "Paso de Patria", "San Juan Bautista de Ñeembucú", "Tacuaras", "Villa Franca", "Villa Oliva", "Villalbín", "Pedro Juan Caballero", "Capitán Bado", "Zanja Pytá", "Karapay", "Saltos del Guairá", "Corpus Christi", "Curuguaty", "Villa Ygatimí", "Itanara", "Ypé Jhú", "Francisco Caballero Álvarez", "Katuete", "La Paloma", "Nueva Esperanza", "Yasy Kañy", "Ybyrarobana", "Yby Pytá", "Benjamín Aceval", "Puerto Pinasco", "Villa Hayes", "Nanawa", "José Falcón", "Tte 1ro Manuel Irala Fernández", "Tte. Esteban Martínez", "Gral José María Bruguez", "Mariscal Estigarribia", "Filadelfia", "Loma Plata", "Fuerte Olimpo", "Puerto Casado", "Bahía Negra", "Carmelo Peralta"];
   var COUNTRIES = [{ code: 'PY', label: 'Paraguay' }, { code: 'AR', label: 'Argentina' }, { code: 'BR', label: 'Brasil' }, { code: 'UY', label: 'Uruguay' }];
   var ZONE_COORDS = {
     'Asunción': [-25.2637, -57.5759], 'Luque': [-25.2699, -57.4854], 'San Lorenzo': [-25.3400, -57.5081],
@@ -115,9 +110,11 @@
       explorar: document.getElementById('view-explorar'),
       publicar: document.getElementById('view-publicar'),
       ofertas: document.getElementById('view-ofertas'),
+      mensajes: document.getElementById('view-mensajes'),
       admin: document.getElementById('view-admin')
     },
     adminTabBtn: document.getElementById('adminTabBtn'),
+    msgBadge: document.getElementById('msgBadge'),
     userBox: document.getElementById('userBox'),
     banner: document.getElementById('banner'),
     searchInput: document.getElementById('searchInput'),
@@ -156,6 +153,11 @@
   var carouselIndex = 0;
   var authMode = 'login';
   var listingsCache = []; // last Explorar fetch, used to populate the zone filter
+  var openThreadUserId = null; // messaging: which conversation is open, if any
+  var lastSeenMsgId = 0; // messaging: id of the last message rendered in the open thread, to avoid needless re-renders on poll
+  var msgPollTimer = null;
+  var editingListingId = null; // publish form: null = creating, otherwise the id being edited
+  var myListingsCache = []; // last "Tus publicaciones" fetch, so Editar can prefill the form without another request
 
   function showToast(msg, ms) {
     el.toast.textContent = msg;
@@ -171,7 +173,7 @@
 
   /* ---------------- Tabs ---------------- */
   function switchTab(tab) {
-    if ((tab === 'publicar' || tab === 'ofertas') && !me) tab = tab; // gates render their own login prompt
+    if ((tab === 'publicar' || tab === 'ofertas' || tab === 'mensajes') && !me) tab = tab; // gates render their own login prompt
     if (tab === 'admin' && !(me && me.isAdmin)) tab = 'explorar';
     currentTab = tab;
     el.tabs.forEach(function (btn) {
@@ -189,6 +191,7 @@
     if (currentTab === 'explorar') loadExplorar();
     else if (currentTab === 'publicar') renderPublicarGate();
     else if (currentTab === 'ofertas') renderOfertasGate();
+    else if (currentTab === 'mensajes') renderMensajesGate();
     else if (currentTab === 'admin') loadAdmin();
   }
 
@@ -216,6 +219,7 @@
       me = data.user;
     } catch (e) { me = null; }
     renderUserBox();
+    if (me) { updateMsgBadge(); startMsgPolling(); } else { stopMsgPolling(); }
   }
 
   function openAuth(mode) {
@@ -266,6 +270,8 @@
       renderUserBox();
       closeAuth();
       showToast(authMode === 'register' ? '¡Cuenta creada! Ya podés publicar y ofertar.' : 'Sesión iniciada.');
+      updateMsgBadge();
+      startMsgPolling();
       renderCurrentTab();
     } catch (err) {
       el.authMsg.innerHTML = '<div class="form-msg err">' + esc(err.message) + '</div>';
@@ -277,6 +283,9 @@
   async function doLogout() {
     try { await api('POST', '/api/auth/logout'); } catch (e) { /* ignore */ }
     me = null;
+    stopMsgPolling();
+    el.msgBadge.hidden = true;
+    openThreadUserId = null;
     renderUserBox();
     switchTab('explorar');
     showToast('Sesión cerrada.');
@@ -376,7 +385,7 @@
 
   /* ---------------- Publicar ---------------- */
   var pendingPhotos = [];
-  function renderPublicarGate() {
+  function renderPublicarGate(editListing) {
     if (!me) {
       el.publicarGate.innerHTML =
         '<div class="empty"><h3>Necesitás una cuenta para publicar</h3><p>Es gratis y toma un minuto.</p>' +
@@ -387,38 +396,49 @@
       document.getElementById('gateLoginBtn').addEventListener('click', function () { openAuth('login'); });
       return;
     }
+    editingListingId = editListing ? editListing.id : null;
+    var L2 = editListing; // shorthand
+    var hasCuotas = !!(L2 && L2.installmentAmount != null);
+
     el.publicarGate.innerHTML =
       '<div class="panel">' +
-      '<h2 style="font-size:1.1rem; margin-bottom:4px;">Publicar un terreno</h2>' +
-      '<p class="hint" style="margin-bottom:16px;">Contá lo esencial: cuánto pedís, dónde está y cómo te contactan. Podés mencionar el estado de las cuotas en la descripción.</p>' +
+      '<h2 style="font-size:1.1rem; margin-bottom:4px;">' + (L2 ? 'Editar publicación' : 'Publicar un terreno') + '</h2>' +
+      '<p class="hint" style="margin-bottom:16px;">' + (L2 ? 'Actualizá los datos de tu lote — los cambios se ven al instante en Explorar.' : 'Contá lo esencial: cuánto pedís, dónde está y cómo te contactan. Podés mencionar el estado de las cuotas en la descripción.') + '</p>' +
       '<form id="publishForm">' +
       '<div class="form-grid">' +
-      '<div class="field full"><label for="f-title">Título breve</label><input type="text" id="f-title" maxlength="70" placeholder="Ej: Lote de 300 m² en zona residencial" required></div>' +
-      '<div class="field"><label for="f-country">País</label><select id="f-country">' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
-      '<div class="field"><label for="f-zone">Zona o ciudad</label><input type="text" id="f-zone" list="zoneOptions" placeholder="Ej: Luque" required><datalist id="zoneOptions">' + ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('') + '</datalist></div>' +
+      '<div class="field full"><label for="f-title">Título breve</label><input type="text" id="f-title" maxlength="70" placeholder="Ej: Lote de 300 m² en zona residencial" value="' + esc(L2 ? L2.title : '') + '" required></div>' +
+      '<div class="field"><label for="f-country">País</label><select id="f-country">' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '"' + (L2 && L2.country === c.code ? ' selected' : '') + '>' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="f-zone">Zona o ciudad</label><input type="text" id="f-zone" list="zoneOptions" placeholder="Ej: Luque" value="' + esc(L2 ? L2.zone : '') + '" required><datalist id="zoneOptions">' + ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('') + '</datalist></div>' +
       '<div class="field full"><label>Ubicación en el mapa (opcional)</label><div class="pick-map" id="pickMap"></div>' +
       '<div class="pick-map-row"><p class="hint" id="pickMapHint">Hacé clic en el mapa para marcar la ubicación exacta del lote.</p><button type="button" class="btn btn-sm btn-ghost" id="pickMapClear" hidden>Quitar marcador</button></div></div>' +
-      '<div class="field full"><label for="f-price">Precio pedido</label><div class="price-row"><input type="number" id="f-price" min="0" step="1" placeholder="8500" required><select id="f-currency"><option value="USD">USD (dólares)</option><option value="PYG">Gs. (guaraníes)</option></select></div></div>' +
-      '<div class="field full"><label for="f-phone">Teléfono / WhatsApp</label><input type="tel" id="f-phone" placeholder="0981 123 456" value="' + esc(me.phone || '') + '" required></div>' +
-      '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-cuotas-toggle"> Todavía estoy pagando este lote a cuotas</label></div>' +
-      '<div class="cuotas-group" id="cuotasGroup" hidden>' +
-      '<div class="field"><label for="f-cuotas-pagadas">Cuotas pagadas</label><input type="number" id="f-cuotas-pagadas" min="0" step="1" placeholder="12"></div>' +
-      '<div class="field"><label for="f-cuotas-restantes">Cuotas restantes</label><input type="number" id="f-cuotas-restantes" min="0" step="1" placeholder="24"></div>' +
-      '<div class="field"><label for="f-cuotas-monto">Monto de cada cuota</label><input type="number" id="f-cuotas-monto" min="0" step="1" placeholder="150"></div>' +
+      '<div class="field full"><label for="f-price">Precio pedido</label><div class="price-row"><input type="number" id="f-price" min="0" step="1" placeholder="8500" value="' + (L2 ? Math.round(L2.price) : '') + '" required><select id="f-currency"><option value="USD"' + (L2 && L2.currency === 'PYG' ? '' : ' selected') + '>USD (dólares)</option><option value="PYG"' + (L2 && L2.currency === 'PYG' ? ' selected' : '') + '>Gs. (guaraníes)</option></select></div></div>' +
+      '<div class="field full"><label for="f-phone">Teléfono / WhatsApp</label><input type="tel" id="f-phone" placeholder="0981 123 456" value="' + esc(L2 ? L2.phone : (me.phone || '')) + '" required></div>' +
+      '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-cuotas-toggle"' + (hasCuotas ? ' checked' : '') + '> Todavía estoy pagando este lote a cuotas</label></div>' +
+      '<div class="cuotas-group" id="cuotasGroup"' + (hasCuotas ? '' : ' hidden') + '>' +
+      '<div class="field"><label for="f-cuotas-pagadas">Cuotas pagadas</label><input type="number" id="f-cuotas-pagadas" min="0" step="1" placeholder="12" value="' + (hasCuotas && L2.installmentsPaid != null ? L2.installmentsPaid : '') + '"></div>' +
+      '<div class="field"><label for="f-cuotas-restantes">Cuotas restantes</label><input type="number" id="f-cuotas-restantes" min="0" step="1" placeholder="24" value="' + (hasCuotas && L2.installmentsLeft != null ? L2.installmentsLeft : '') + '"></div>' +
+      '<div class="field"><label for="f-cuotas-monto">Monto de cada cuota</label><input type="number" id="f-cuotas-monto" min="0" step="1" placeholder="150" value="' + (hasCuotas ? L2.installmentAmount : '') + '"></div>' +
       '<p class="hint" style="flex:1 1 100%; margin:-4px 0 0;">Poné el monto que pagabas al inicio de la compra — algunas loteadoras lo van ajustando con el tiempo, así que puede no ser el monto actual.</p>' +
-      '<div class="field"><label for="f-cuotas-fecha">Fecha de inicio de compra</label><input type="date" id="f-cuotas-fecha"></div>' +
-      '<div class="field"><label for="f-cuotas-total">Total abonado hasta hoy (opcional)</label><input type="number" id="f-cuotas-total" min="0" step="1" placeholder="Si pagaste montos extra, además de las cuotas"></div>' +
+      '<div class="field"><label for="f-cuotas-fecha">Fecha de inicio de compra</label><input type="date" id="f-cuotas-fecha" value="' + (hasCuotas && L2.purchaseStartDate ? L2.purchaseStartDate : '') + '"></div>' +
+      '<div class="field"><label for="f-cuotas-total">Total abonado hasta hoy (opcional)</label><input type="number" id="f-cuotas-total" min="0" step="1" placeholder="Si pagaste montos extra, además de las cuotas" value="' + (hasCuotas && L2.totalPaid != null ? L2.totalPaid : '') + '"></div>' +
       '<div class="cuotas-calc" id="cuotasCalc" hidden></div>' +
       '</div>' +
-      '<div class="field full"><label for="f-desc">Descripción</label><textarea id="f-desc" placeholder="Superficie, cuotas que faltan, loteadora, servicios, referencias del lugar..." required></textarea></div>' +
+      '<div class="field full"><label for="f-desc">Descripción</label><textarea id="f-desc" placeholder="Superficie, cuotas que faltan, loteadora, servicios, referencias del lugar..." required>' + esc(L2 ? L2.description : '') + '</textarea></div>' +
       '<div class="field full"><label>Fotos (hasta 4)</label><div class="photo-row" id="photoRow"></div><input type="file" id="photoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
+      (L2
+        ? '<div class="field full"><p class="hint">' + (L2.commissionAcceptedAt ? 'Aceptaste la comisión del 5% sobre la venta al publicar este lote.' : '') + '</p></div>'
+        : '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-accept-terms" required> Acepto que, si vendo este lote a través de Lote a Lote, voy a abonar una comisión del <b>5% sobre el monto final de venta</b>.</label></div>') +
       '</div>' +
-      '<div style="margin-top:16px;"><button type="submit" class="btn btn-primary" id="publishSubmitBtn">Publicar terreno</button></div>' +
+      '<div style="margin-top:16px; display:flex; gap:10px;"><button type="submit" class="btn btn-primary" id="publishSubmitBtn">' + (L2 ? 'Guardar cambios' : 'Publicar terreno') + '</button>' +
+      (L2 ? '<button type="button" class="btn btn-ghost" id="cancelEditBtn">Cancelar</button>' : '') + '</div>' +
       '<div id="publishMsg"></div>' +
       '</form></div>' +
       '<div class="my-listings"><h2>Tus publicaciones</h2><div id="myListingsList"></div><div class="empty" id="emptyMyListings" hidden><h3>Todavía no publicaste ningún lote</h3><p>Completá el formulario de arriba para sumarlo a Explorar.</p></div></div>';
 
-    pendingPhotos = [];
+    var cancelBtn = document.getElementById('cancelEditBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', function () { editingListingId = null; renderPublicarGate(); });
+
+    pendingPhotos = L2 && L2.photos ? L2.photos.slice() : [];
     var photoRow = document.getElementById('photoRow');
     var photoInput = document.getElementById('photoInput');
     function renderPhotoRow() {
@@ -474,9 +494,12 @@
         var fieldEl = document.getElementById(id);
         if (fieldEl) fieldEl.addEventListener('input', updateCuotasCalc);
       });
+      if (hasCuotas) updateCuotasCalc();
     }
 
-    var pickedLat = null, pickedLng = null, pickMap = null, pickMarker = null;
+    var pickedLat = L2 && L2.lat != null ? L2.lat : null;
+    var pickedLng = L2 && L2.lng != null ? L2.lng : null;
+    var pickMap = null, pickMarker = null;
     (function initPickMap() {
       var box = document.getElementById('pickMap');
       if (!box) return;
@@ -491,7 +514,16 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
         }).addTo(pickMap);
-        pickMap.setView(formCoords(), 12);
+        if (pickedLat != null && pickedLng != null) {
+          pickMap.setView([pickedLat, pickedLng], 14);
+          pickMarker = L.marker([pickedLat, pickedLng]).addTo(pickMap);
+          var hint0 = document.getElementById('pickMapHint');
+          if (hint0) hint0.textContent = 'Marcador colocado — se va a publicar con esta ubicación exacta.';
+          var clearBtn0 = document.getElementById('pickMapClear');
+          if (clearBtn0) clearBtn0.hidden = false;
+        } else {
+          pickMap.setView(formCoords(), 12);
+        }
         setTimeout(function () { pickMap.invalidateSize(); }, 60);
         pickMap.on('click', function (e) {
           pickedLat = e.latlng.lat; pickedLng = e.latlng.lng;
@@ -540,10 +572,20 @@
         totalPaid: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-total').value : null,
         purchaseStartDate: cuotasToggle && cuotasToggle.checked ? document.getElementById('f-cuotas-fecha').value : null
       };
+      if (!editingListingId) {
+        var acceptEl = document.getElementById('f-accept-terms');
+        payload.acceptedTerms = !!(acceptEl && acceptEl.checked);
+      }
       btn.disabled = true;
       try {
-        await api('POST', '/api/listings', payload);
-        showToast('¡Listo! Tu lote ya está publicado en Explorar.');
+        if (editingListingId) {
+          await api('PATCH', '/api/listings/' + editingListingId, payload);
+          showToast('Cambios guardados.');
+          editingListingId = null;
+        } else {
+          await api('POST', '/api/listings', payload);
+          showToast('¡Listo! Tu lote ya está publicado en Explorar.');
+        }
         renderPublicarGate();
         loadMyListings();
       } catch (err) {
@@ -559,6 +601,7 @@
   async function loadMyListings() {
     try {
       var data = await api('GET', '/api/listings/mine');
+      myListingsCache = data.listings;
       var list = document.getElementById('myListingsList');
       var empty = document.getElementById('emptyMyListings');
       if (!list) return;
@@ -573,6 +616,7 @@
           '<span class="badge ' + l.status + '">' + (l.status === 'vendido' ? 'Vendido' : 'Activo') + '</span></div></div>' +
           '<div class="mini-actions">' +
           '<button class="btn btn-sm btn-ghost" data-open="' + l.id + '">Ver</button>' +
+          '<button class="btn btn-sm btn-ghost" data-edit="' + l.id + '">Editar</button>' +
           (l.status !== 'vendido' ? '<button class="btn btn-sm btn-soft" data-mark-sold="' + l.id + '">Marcar vendido</button>' : '') +
           '<button class="btn btn-sm btn-danger" data-delete="' + l.id + '">Eliminar</button>' +
           '</div></div>'
@@ -580,9 +624,18 @@
       }).join('');
       list.onclick = async function (e) {
         var open = e.target.closest('[data-open]');
+        var edit = e.target.closest('[data-edit]');
         var sold = e.target.closest('[data-mark-sold]');
         var del = e.target.closest('[data-delete]');
         if (open) { openDetail(Number(open.getAttribute('data-open'))); return; }
+        if (edit) {
+          var listingToEdit = myListingsCache.find(function (l) { return l.id === Number(edit.getAttribute('data-edit')); });
+          if (listingToEdit) {
+            renderPublicarGate(listingToEdit);
+            document.getElementById('publicarGate').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          return;
+        }
         if (sold) {
           try { await api('PATCH', '/api/listings/' + sold.getAttribute('data-mark-sold'), { status: 'vendido' }); showToast('Marcado como vendido.'); loadMyListings(); } catch (err) { showToast(err.message, 4500); }
           return;
@@ -806,7 +859,32 @@
       (wa ? '<a class="btn btn-sm btn-soft" href="' + wa + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') +
       '<span style="margin-left:auto; color:var(--ink-faint); font-size:0.8rem;">Publicado por ' + esc(l.ownerLabel || '—') + '</span>';
 
+    renderDialogDM(l);
     await renderDetailAction(l);
+  }
+
+  function renderDialogDM(l) {
+    var box = document.getElementById('dialogDM');
+    if (!box) return;
+    if (!me || l.isMine) { box.hidden = true; box.innerHTML = ''; return; }
+    box.hidden = false;
+    box.innerHTML =
+      '<span class="dm-label">Escribile un mensaje al vendedor sobre este lote (además de ofertar o llamar):</span>' +
+      '<textarea id="dmInput" placeholder="Ej: ¿Sigue disponible? Me interesa..." maxlength="2000"></textarea>' +
+      '<button type="button" class="btn btn-sm btn-primary" id="dmSendBtn">Enviar mensaje</button>';
+    document.getElementById('dmSendBtn').addEventListener('click', async function () {
+      var input = document.getElementById('dmInput');
+      var body = input.value.trim();
+      if (!body) return;
+      var btn = document.getElementById('dmSendBtn');
+      btn.disabled = true;
+      try {
+        await api('POST', '/api/messages', { toUserId: l.ownerId, listingId: l.id, body: body });
+        input.value = '';
+        showToast('Mensaje enviado. Vas a ver la respuesta en la pestaña Mensajes.');
+        updateMsgBadge();
+      } catch (err) { showToast(err.message, 4500); } finally { btn.disabled = false; }
+    });
   }
 
   async function renderDetailAction(l) {
@@ -881,6 +959,125 @@
     if (currentTab === 'publicar' && me) loadMyListings();
     if (currentTab === 'explorar') loadExplorar();
   }
+
+  /* ---------------- Mensajes ---------------- */
+  function initials(name) {
+    var parts = String(name || '?').trim().split(/\s+/);
+    return ((parts[0] || '?')[0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+  }
+
+  async function updateMsgBadge() {
+    if (!me) { el.msgBadge.hidden = true; return; }
+    try {
+      var data = await api('GET', '/api/messages/unread-count');
+      if (data.count > 0) { el.msgBadge.hidden = false; el.msgBadge.textContent = data.count > 99 ? '99+' : String(data.count); }
+      else { el.msgBadge.hidden = true; }
+    } catch (e) { /* silent */ }
+  }
+
+  function startMsgPolling() {
+    stopMsgPolling();
+    msgPollTimer = setInterval(function () {
+      if (!me) return;
+      updateMsgBadge();
+      if (currentTab === 'mensajes' && openThreadUserId != null) pollOpenThread();
+      else if (currentTab === 'mensajes') loadThreads();
+    }, 15000);
+  }
+  function stopMsgPolling() {
+    if (msgPollTimer) { clearInterval(msgPollTimer); msgPollTimer = null; }
+  }
+
+  function renderMensajesGate() {
+    var gate = document.getElementById('mensajesGate');
+    if (!me) {
+      gate.innerHTML =
+        '<div class="empty"><h3>Iniciá sesión para ver tus mensajes</h3><p>Ahí vas a poder escribirte con compradores y vendedores.</p>' +
+        '<div style="margin-top:14px;"><button class="btn btn-primary" id="gateLoginBtn3">Iniciar sesión</button></div></div>';
+      document.getElementById('gateLoginBtn3').addEventListener('click', function () { openAuth('login'); });
+      return;
+    }
+    openThreadUserId = null;
+    loadThreads();
+  }
+
+  async function loadThreads() {
+    var gate = document.getElementById('mensajesGate');
+    if (!gate) return;
+    try {
+      var data = await api('GET', '/api/messages/threads');
+      if (!data.threads.length) {
+        gate.innerHTML = '<h2 style="font-size:1.1rem; margin-bottom:14px;">Mensajes</h2><div class="empty"><h3>Todavía no tenés conversaciones</h3><p>Cuando escribas o te escriban sobre un lote, va a aparecer acá.</p></div>';
+        return;
+      }
+      gate.innerHTML = '<h2 style="font-size:1.1rem; margin-bottom:14px;">Mensajes</h2><div id="threadList"></div>';
+      var list = document.getElementById('threadList');
+      list.innerHTML = data.threads.map(function (t) {
+        return (
+          '<button type="button" class="thread-list-row' + (t.unread ? ' unread' : '') + '" data-open-thread="' + t.otherUserId + '">' +
+          '<span class="thread-avatar">' + esc(initials(t.otherUserName)) + '</span>' +
+          '<span class="thread-info"><h4>' + esc(t.otherUserName || 'Usuario') + '</h4>' +
+          '<p>' + (t.lastMine ? 'Vos: ' : '') + esc(t.lastMessage) + '</p>' +
+          (t.listingTitle ? '<span class="lt">Sobre: ' + esc(t.listingTitle) + '</span>' : '') + '</span>' +
+          '<span class="thread-meta">' + timeAgo(t.lastAt) + (t.unread ? '<span class="thread-unread-dot">' + t.unread + '</span>' : '') + '</span>' +
+          '</button>'
+        );
+      }).join('');
+      list.onclick = function (e) {
+        var btn = e.target.closest('[data-open-thread]');
+        if (btn) openThread(Number(btn.getAttribute('data-open-thread')));
+      };
+    } catch (err) { showToast(err.message, 4500); }
+  }
+
+  function msgBubbleHtml(m) {
+    return (
+      '<div class="msg-bubble ' + (m.mine ? 'mine' : 'theirs') + '">' +
+      (m.listingTitle ? '<span class="b-listing">Sobre: ' + esc(m.listingTitle) + '</span>' : '') +
+      esc(m.body) +
+      '<span class="b-ts">' + timeAgo(m.createdAt) + '</span></div>'
+    );
+  }
+
+  async function openThread(otherUserId) {
+    openThreadUserId = otherUserId;
+    lastSeenMsgId = 0;
+    await renderThreadView(true);
+    updateMsgBadge();
+  }
+
+  async function renderThreadView(scrollDown) {
+    var gate = document.getElementById('mensajesGate');
+    if (!gate || openThreadUserId == null) return;
+    var data;
+    try {
+      data = await api('GET', '/api/messages/thread/' + openThreadUserId);
+    } catch (err) { showToast(err.message, 4500); openThreadUserId = null; loadThreads(); return; }
+    var msgs = data.messages;
+    var newestId = msgs.length ? msgs[msgs.length - 1].id : 0;
+    if (newestId === lastSeenMsgId && document.getElementById('threadMsgs')) return; // nothing new, skip re-render (avoids scroll jump)
+    lastSeenMsgId = newestId;
+    gate.innerHTML =
+      '<div class="thread-view-head"><button type="button" class="btn btn-sm btn-ghost" id="backToThreads">&larr; Volver</button><h3>' + esc(data.otherUser.displayName) + '</h3></div>' +
+      '<div class="msg-thread" id="threadMsgs">' + msgs.map(msgBubbleHtml).join('') + '</div>' +
+      '<form class="msg-compose" id="msgComposeForm"><textarea id="msgComposeInput" placeholder="Escribí un mensaje..." maxlength="2000" required></textarea><button type="submit" class="btn btn-primary">Enviar</button></form>';
+    document.getElementById('backToThreads').addEventListener('click', function () { openThreadUserId = null; loadThreads(); });
+    var threadBox = document.getElementById('threadMsgs');
+    if (scrollDown) threadBox.scrollTop = threadBox.scrollHeight;
+    document.getElementById('msgComposeForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var input = document.getElementById('msgComposeInput');
+      var body = input.value.trim();
+      if (!body) return;
+      try {
+        await api('POST', '/api/messages', { toUserId: openThreadUserId, body: body });
+        input.value = '';
+        await renderThreadView(true);
+      } catch (err) { showToast(err.message, 4500); }
+    });
+  }
+
+  function pollOpenThread() { renderThreadView(false); }
 
   /* ---------------- Admin ---------------- */
   async function loadAdmin() {

@@ -239,6 +239,31 @@
   .toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:999px; font-size:0.86rem; font-weight:500; box-shadow:var(--shadow); z-index:80; display:flex; align-items:center; gap:8px; max-width:90vw;}
   .toast[hidden]{display:none;}
   .visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+
+  .tab-badge{display:inline-flex; align-items:center; justify-content:center; min-width:17px; height:17px; padding:0 4px; margin-left:5px; border-radius:999px; background:var(--bad); color:#fff; font-size:0.66rem; font-weight:700; vertical-align:2px;}
+  .thread-list-row{display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin-bottom:8px; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;}
+  .thread-list-row:hover{background:var(--paper);}
+  .thread-list-row.unread{border-color:var(--accent); background:color-mix(in srgb, var(--accent-soft) 45%, var(--surface));}
+  .thread-avatar{flex:none; width:38px; height:38px; border-radius:50%; background:var(--moss-soft); color:var(--moss); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.92rem;}
+  .thread-info{flex:1; min-width:0;}
+  .thread-info h4{font-size:0.92rem; margin:0 0 2px;}
+  .thread-info p{font-size:0.82rem; color:var(--ink-soft); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .thread-info .lt{font-size:0.72rem; color:var(--ink-faint);}
+  .thread-meta{flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:4px; font-size:0.72rem; color:var(--ink-faint);}
+  .thread-unread-dot{background:var(--accent); color:var(--accent-ink); border-radius:999px; min-width:18px; height:18px; padding:0 5px; font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .thread-view-head{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .thread-view-head h3{font-size:1rem; margin:0; flex:1;}
+  .msg-thread{display:flex; flex-direction:column; gap:8px; max-height:52vh; overflow-y:auto; padding:4px 2px 8px;}
+  .msg-bubble{max-width:76%; padding:9px 12px; border-radius:12px; font-size:0.88rem; line-height:1.42;}
+  .msg-bubble .b-listing{display:block; font-size:0.7rem; opacity:0.75; margin-bottom:3px; font-weight:600;}
+  .msg-bubble .b-ts{display:block; font-size:0.68rem; opacity:0.65; margin-top:3px;}
+  .msg-bubble.mine{align-self:flex-end; background:var(--accent-soft); color:var(--accent-strong); border-bottom-right-radius:3px;}
+  .msg-bubble.theirs{align-self:flex-start; background:var(--moss-soft); color:var(--moss); border-bottom-left-radius:3px;}
+  .msg-compose{display:flex; gap:8px; align-items:flex-end; margin-top:12px;}
+  .msg-compose textarea{flex:1; resize:vertical; min-height:44px; max-height:120px;}
+  .dm-box{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-top:10px; display:flex; gap:8px; align-items:flex-end; flex-wrap:wrap;}
+  .dm-box textarea{flex:1 1 200px; resize:vertical; min-height:40px;}
+  .dm-box .dm-label{flex:1 1 100%; font-size:0.78rem; font-weight:500; color:var(--ink-soft);}
   [hidden]{display:none !important;}
 
   .site-footer{border-top:1px solid var(--line); margin-top:56px; background:var(--surface);}
@@ -273,6 +298,7 @@
       <button role="tab" data-tab="explorar" aria-selected="true">Explorar</button>
       <button role="tab" data-tab="publicar" aria-selected="false">Publicar</button>
       <button role="tab" data-tab="ofertas" aria-selected="false">Mis ofertas</button>
+      <button role="tab" data-tab="mensajes" aria-selected="false">Mensajes<span class="tab-badge" id="msgBadge" hidden>0</span></button>
       <button role="tab" data-tab="admin" aria-selected="false" id="adminTabBtn" hidden>Admin</button>
     </nav>
     <div class="topbar-right" id="userBox"></div>
@@ -338,6 +364,11 @@
     <div id="ofertasGate"></div>
   </section>
 
+  <!-- ================= MENSAJES ================= -->
+  <section class="view" id="view-mensajes" hidden>
+    <div id="mensajesGate"></div>
+  </section>
+
   <!-- ================= ADMIN ================= -->
   <section class="view" id="view-admin" hidden>
     <h2 style="font-size:1.1rem; margin-bottom:14px;">Panel de administración</h2>
@@ -399,6 +430,7 @@
       <p class="map-note" id="dialogMapNote"></p>
       <hr class="divider">
       <div class="contact-row" id="dialogContact"></div>
+      <div id="dialogDM"></div>
       <div id="dialogActionArea"></div>
     </div>
   </div>
