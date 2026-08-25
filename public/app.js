@@ -49,6 +49,9 @@
   function phoneIcon() {
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.5 3h3l1.5 4.5-2 1.7a12 12 0 0 0 5.8 5.8l1.7-2 4.5 1.5v3c0 1-.9 1.8-1.9 1.7C10.8 18.9 5.1 13.2 4.8 5.9 4.7 4.9 5.5 4 6.5 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   }
+  function checkIcon() {
+    return '<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
 
   var ZONES = ["Asunción", "Concepción", "Belén", "Horqueta", "Loreto", "San Carlos", "San Lázaro", "Yvy Ya'ú", "Azotey", "Sgto. José Félix López", "San Alfredo", "Paso Barreto", "San Pedro del Ykuamandiyu", "Antequera", "Choré", "General Elizardo Aquino", "Itacurubí del Rosario", "Lima", "Nueva Germania", "San Estanislao", "San Pablo", "Tacuatí", "Unión", "25 de Diciembre", "Villa del Rosario", "General Resquín", "Yataity del Norte", "Guajayví", "Capiibary", "Santa Rosa del Aguaray", "Yryvu Cuá", "Liberación", "Caacupé", "Altos", "Arroyos y Esteros", "Atyra", "Caraguatay", "Emboscada", "Eusebio Ayala", "Isla Pucú", "Itacurubí de la Cordillera", "Juan de Mena", "Loma Grande", "Mbocayaty del Yhaguy", "Nueva Colombia", "Piribebuy", "Primero de Marzo", "San Bernardino", "Santa Elena", "Tobatí", "Valenzuela", "San José Obrero", "Villarrica", "Borja", "Mauricio José Troche", "Coronel Martínez", "Félix Pérez Cardozo", "General Eugenio A. Garay", "Colonia Independencia", "Itapé", "Iturbe", "José Fassardi", "Mbocayaty", "Natalicio Talavera", "Ñumi", "San Salvador", "Yataity", "Dr. Bottrell", "Paso Yobaí", "Tebicuary", "Coronel Oviedo", "Caaguazú", "Carayao", "Cecilio Báez", "Santa Rosa del Mbutuy", "Dr. Juan Manuel Frutos", "Repatriación", "Nueva Londres", "San Joaquín", "San José de los Arroyos", "Yhú", "J Eulogio Estigarribia", "R.I. 3 Corrales", "Raúl Arsenio Oviedo", "José Domingo Ocampos", "Mcal. Francisco Solano López", "La Pastora", "3 de Febrero", "Simón Bolívar", "Vaquería", "Tembiapora", "Nueva Toledo", "Caazapá", "Abaí", "Buena Vista", "Moisés Bertoni", "General Higinio Morínigo", "Maciel", "San Juan Nepomuceno", "Tavai", "Fulgencio Yegros", "Yutí", "3 de Mayo", "Encarnación", "Bella Vista", "Cambyreta", "Capitán Meza", "Capitán Miranda", "Nueva Alborada", "Carmen del Paraná", "Coronel Bogado", "Carlos Antonio López", "Natalio", "Fram", "General Artigas", "General Delgado", "Hohenau", "Jesús", "Leandro Oviedo", "Obligado", "Mayor Otaño", "San Cosme y Damián", "San Pedro del Paraná", "San Rafael del Paraná", "Trinidad", "Edelira", "Tomás Romero Pereira", "Alto Vera", "La Paz", "Yatytay", "San Juan del Paraná", "Pirapo", "Itapúa Poty", "San Juan Bautista", "Ayolas", "San Ignacio", "San Miguel", "San Patricio", "Santa María", "Santa Rosa", "Santiago", "Villa Florida", "Yabebyry", "Paraguarí", "Acahay", "Caapucú", "General Bernardino Caballero", "Carapeguá", "Escobar", "La Colmena", "Mbuyapey", "Pirayú", "Quiindy", "Quyquyho", "San Roque González", "Sapucaí", "Tebicuary-mí", "Yaguarón", "Ybycuí", "Yvytimí", "Ciudad del Este", "Presidente Franco", "Domingo Martínez de Irala", "Dr. Juan León Mallorquín", "Hernandarias", "Itakyrý", "Juan E. O'Leary", "Ñacunday", "Yguazú", "Los Cedrales", "Minga Guazú", "San Cristóbal", "Santa Rita", "Naranjal", "Santa Rosa del Monday", "Minga Pora", "Mbaracayú", "San Alberto", "Iruña", "Santa Fe del Paraná", "Tavapy", "Dr. Raúl Peña", "Areguá", "Capiatá", "Fernando de la Mora", "Guarambaré", "Itá", "Itauguá", "Lambaré", "Limpio", "Luque", "Mariano Roque Alonso", "Nueva Italia", "Ñemby", "San Antonio", "San Lorenzo", "Villa Elisa", "Villeta", "Ypacaraí", "Ypané", "J Augusto Saldivar", "Pilar", "Alberdi", "Cerrito", "Desmochados", "General Díaz", "Guazú Cuá", "Humaitá", "Isla Umbú", "Los Laureles", "Mayor Martínez", "Paso de Patria", "San Juan Bautista de Ñeembucú", "Tacuaras", "Villa Franca", "Villa Oliva", "Villalbín", "Pedro Juan Caballero", "Capitán Bado", "Zanja Pytá", "Karapay", "Saltos del Guairá", "Corpus Christi", "Curuguaty", "Villa Ygatimí", "Itanara", "Ypé Jhú", "Francisco Caballero Álvarez", "Katuete", "La Paloma", "Nueva Esperanza", "Yasy Kañy", "Ybyrarobana", "Yby Pytá", "Benjamín Aceval", "Puerto Pinasco", "Villa Hayes", "Nanawa", "José Falcón", "Tte 1ro Manuel Irala Fernández", "Tte. Esteban Martínez", "Gral José María Bruguez", "Mariscal Estigarribia", "Filadelfia", "Loma Plata", "Fuerte Olimpo", "Puerto Casado", "Bahía Negra", "Carmelo Peralta"];
   var COUNTRIES = [{ code: 'PY', label: 'Paraguay' }, { code: 'AR', label: 'Argentina' }, { code: 'BR', label: 'Brasil' }, { code: 'UY', label: 'Uruguay' }];
@@ -56,6 +59,17 @@
   function propertyTypeLabel(code) {
     for (var i = 0; i < PROPERTY_TYPES.length; i++) if (PROPERTY_TYPES[i].code === code) return PROPERTY_TYPES[i].label;
     return 'Terreno';
+  }
+  var SERVICE_CATEGORIES = [
+    { code: 'dron', label: 'Dron / fotos aéreas' },
+    { code: 'fotografia', label: 'Fotografía' },
+    { code: 'video', label: 'Video' },
+    { code: 'fumigacion', label: 'Fumigación (campo)' },
+    { code: 'otros', label: 'Otros servicios' }
+  ];
+  function serviceCategoryLabel(code) {
+    for (var i = 0; i < SERVICE_CATEGORIES.length; i++) if (SERVICE_CATEGORIES[i].code === code) return SERVICE_CATEGORIES[i].label;
+    return 'Otros servicios';
   }
   var ZONE_COORDS = {
     'Asunción': [-25.2637, -57.5759], 'Luque': [-25.2699, -57.4854], 'San Lorenzo': [-25.3400, -57.5081],
@@ -117,6 +131,7 @@
     views: {
       explorar: document.getElementById('view-explorar'),
       publicar: document.getElementById('view-publicar'),
+      servicios: document.getElementById('view-servicios'),
       ofertas: document.getElementById('view-ofertas'),
       mensajes: document.getElementById('view-mensajes'),
       admin: document.getElementById('view-admin')
@@ -133,6 +148,7 @@
     listingGrid: document.getElementById('listingGrid'),
     emptyExplorar: document.getElementById('emptyExplorar'),
     publicarGate: document.getElementById('publicarGate'),
+    serviciosGate: document.getElementById('serviciosGate'),
     ofertasGate: document.getElementById('ofertasGate'),
     adminStats: document.getElementById('adminStats'),
     adminUsersTable: document.getElementById('adminUsersTable'),
@@ -202,6 +218,7 @@
   function renderCurrentTab() {
     if (currentTab === 'explorar') loadExplorar();
     else if (currentTab === 'publicar') renderPublicarGate();
+    else if (currentTab === 'servicios') renderServiciosGate();
     else if (currentTab === 'ofertas') renderOfertasGate();
     else if (currentTab === 'mensajes') renderMensajesGate();
     else if (currentTab === 'admin') loadAdmin();
@@ -379,8 +396,10 @@
       : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>';
     var statusPill = l.status === 'vendido' ? '<span class="status-pill vendido">Vendido</span>' : '';
     var featuredPill = l.featured ? '<span class="featured-pill">' + starIcon() + ' Destacado</span>' : '';
+    var verifiedPill = l.verified ? '<span class="verified-pill">' + checkIcon() + ' Verificado</span>' : '';
     var typePill = '<span class="type-pill">' + esc(propertyTypeLabel(l.propertyType)) + '</span>';
     var mineTag = l.isMine ? ' · <em>vos</em>' : '';
+    var agencyTag = l.ownerIsAgency ? '<span class="agency-tag">Agencia</span>' : '';
     var cuotasLine = (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null))
       ? '<div class="card-cuotas">A cuotas: ' + (l.installmentsPaid != null ? l.installmentsPaid : '—') + '/' +
         ((l.installmentsPaid != null ? l.installmentsPaid : 0) + (l.installmentsLeft != null ? l.installmentsLeft : 0)) +
@@ -389,13 +408,13 @@
     return (
       '<button class="card' + (l.featured ? ' featured' : '') + '" data-open="' + l.id + '">' +
       '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' +
-      '<span class="card-badges-right">' + featuredPill + statusPill + '</span>' + typePill + '</div>' +
+      '<span class="card-badges-right">' + featuredPill + verifiedPill + statusPill + '</span>' + typePill + '</div>' +
       '<div class="card-body">' +
       '<h3>' + esc(l.title) + '</h3>' +
       '<div class="card-price num">' + money(l.price, l.currency) + '</div>' +
       cuotasLine +
       '<p class="card-desc">' + esc(l.description) + '</p>' +
-      '<div class="card-foot"><span class="owner-tag">' + esc(l.ownerLabel || '—') + mineTag + '</span><span class="btn btn-sm btn-ghost" style="pointer-events:none;">Ver detalle</span></div>' +
+      '<div class="card-foot"><span class="owner-tag" style="flex:1; min-width:0;">' + esc(l.ownerLabel || '—') + mineTag + '</span>' + agencyTag + '<span class="btn btn-sm btn-ghost" style="pointer-events:none; flex:none;">Ver detalle</span></div>' +
       '</div></button>'
     );
   }
@@ -675,6 +694,251 @@
     } catch (err) { /* silent */ }
   }
 
+  /* ---------------- Servicios ---------------- */
+  var pendingServicePhotos = [];
+  var serviceCatFilterValue = '';
+  var myServicesCache = [];
+
+  function serviceCardHtml(s) {
+    var photo = s.photos && s.photos[0];
+    var media = photo
+      ? '<img src="' + photo + '" alt="">'
+      : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>';
+    var mineTag = s.isMine ? ' · <em>vos</em>' : '';
+    var priceHtml = s.price != null ? '<div class="card-price num">' + money(s.price, s.currency) + '</div>' : '<div class="card-price num" style="font-size:0.95rem; color:var(--ink-soft);">Consultar precio</div>';
+    return (
+      '<button class="card" data-open-service="' + s.id + '">' +
+      '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(s.zone) + ', ' + esc(countryLabel(s.country)) + '</span></span>' +
+      '<span class="service-cat-pill">' + esc(serviceCategoryLabel(s.category)) + '</span></div>' +
+      '<div class="card-body">' +
+      '<h3>' + esc(s.title) + '</h3>' +
+      priceHtml +
+      '<p class="card-desc">' + esc(s.description) + '</p>' +
+      '<div class="card-foot"><span class="owner-tag">' + esc(s.ownerLabel || '—') + mineTag + '</span><span class="btn btn-sm btn-ghost" style="pointer-events:none;">Ver detalle</span></div>' +
+      '</div></button>'
+    );
+  }
+
+  function renderServiciosGate() {
+    el.serviciosGate.innerHTML =
+      '<div class="cta-banner"><div><h3>¿Ofrecés un servicio para el campo o la propiedad?</h3>' +
+      '<p>Dron, fotografía, video o fumigación: publicá tu servicio acá y que te encuentren compradores y vendedores de la plataforma.</p></div>' +
+      '<button class="btn btn-primary" id="ctaPublishServiceBtn">Publicá aquí</button></div>' +
+      '<div class="controls"><div class="field"><label for="serviceCatFilter">Categoría</label><select id="serviceCatFilter"><option value="">Todas</option>' +
+      SERVICE_CATEGORIES.map(function (c) { return '<option value="' + c.code + '"' + (serviceCatFilterValue === c.code ? ' selected' : '') + '>' + esc(c.label) + '</option>'; }).join('') +
+      '</select></div></div>' +
+      '<div class="grid" id="serviceGrid"></div>' +
+      '<div class="empty" id="emptyServicios" hidden><h3>Todavía no hay servicios publicados</h3><p>Sé el primero: publicá el tuyo más abajo.</p></div>' +
+      '<div class="my-listings" id="servicePublishArea" style="margin-top:32px;"></div>';
+
+    document.getElementById('serviceCatFilter').addEventListener('change', function () {
+      serviceCatFilterValue = this.value;
+      loadServices();
+    });
+    document.getElementById('ctaPublishServiceBtn').addEventListener('click', function () {
+      if (!me) { openAuth('login'); return; }
+      document.getElementById('servicePublishArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('serviceGrid').addEventListener('click', function (e) {
+      var card = e.target.closest('[data-open-service]');
+      if (card) openServiceDetail(Number(card.getAttribute('data-open-service')));
+    });
+
+    loadServices();
+    renderServicePublishArea();
+  }
+
+  async function loadServices() {
+    var grid = document.getElementById('serviceGrid');
+    var empty = document.getElementById('emptyServicios');
+    if (!grid) return;
+    try {
+      var params = new URLSearchParams();
+      if (serviceCatFilterValue) params.set('category', serviceCatFilterValue);
+      var data = await api('GET', '/api/services?' + params.toString());
+      empty.hidden = data.services.length !== 0;
+      grid.innerHTML = data.services.map(serviceCardHtml).join('');
+    } catch (err) {
+      showBanner('No se pudieron cargar los servicios: ' + err.message, true);
+    }
+  }
+
+  function renderServicePublishArea() {
+    var area = document.getElementById('servicePublishArea');
+    if (!area) return;
+    if (!me) {
+      area.innerHTML =
+        '<div class="empty"><h3>Iniciá sesión para publicar tu servicio</h3><p>Es gratis y toma un minuto.</p>' +
+        '<div style="margin-top:14px; display:flex; gap:10px; justify-content:center;">' +
+        '<button class="btn btn-primary" id="gateRegisterBtnSrv">Crear cuenta</button>' +
+        '<button class="btn btn-ghost" id="gateLoginBtnSrv">Ya tengo cuenta</button></div></div>';
+      document.getElementById('gateRegisterBtnSrv').addEventListener('click', function () { openAuth('register'); });
+      document.getElementById('gateLoginBtnSrv').addEventListener('click', function () { openAuth('login'); });
+      return;
+    }
+
+    area.innerHTML =
+      '<div class="panel">' +
+      '<h2 style="font-size:1.1rem; margin-bottom:4px;">Publicar un servicio</h2>' +
+      '<p class="hint" style="margin-bottom:16px;">Contá qué ofrecés, en qué zona trabajás y cómo te contactan.</p>' +
+      '<form id="publishServiceForm">' +
+      '<div class="form-grid">' +
+      '<div class="field"><label for="s-cat">Categoría</label><select id="s-cat">' + SERVICE_CATEGORIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="s-title">Título breve</label><input type="text" id="s-title" maxlength="70" placeholder="Ej: Fotos y video aéreo con dron" required></div>' +
+      '<div class="field"><label for="s-country">País</label><select id="s-country">' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="s-zone">Zona donde trabajás</label><input type="text" id="s-zone" list="zoneOptionsSrv" placeholder="Ej: Central, o todo el país" required><datalist id="zoneOptionsSrv">' + ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('') + '</datalist></div>' +
+      '<div class="field full"><label for="s-price">Precio (opcional)</label><div class="price-row"><input type="number" id="s-price" min="0" step="1" placeholder="Dejá vacío si preferís cotizar por consulta"><select id="s-currency"><option value="USD" selected>USD (dólares)</option><option value="PYG">Gs. (guaraníes)</option></select></div></div>' +
+      '<div class="field full"><label for="s-phone">Teléfono / WhatsApp</label><input type="tel" id="s-phone" placeholder="0981 123 456" value="' + esc(me.phone || '') + '" required></div>' +
+      '<div class="field full"><label for="s-desc">Descripción</label><textarea id="s-desc" placeholder="Qué incluye el servicio, equipo que usás, zonas donde trabajás, disponibilidad..." required></textarea></div>' +
+      '<div class="field full"><label>Fotos o ejemplos de tu trabajo (hasta 4)</label><div class="photo-row" id="servicePhotoRow"></div><input type="file" id="servicePhotoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
+      '</div>' +
+      '<div style="margin-top:16px;"><button type="submit" class="btn btn-primary" id="publishServiceSubmitBtn">Publicar servicio</button></div>' +
+      '<div id="publishServiceMsg"></div>' +
+      '</form></div>' +
+      '<div class="my-listings"><h2>Tus servicios publicados</h2><div id="myServicesList"></div><div class="empty" id="emptyMyServices" hidden><h3>Todavía no publicaste ningún servicio</h3><p>Completá el formulario de arriba para sumarlo.</p></div></div>';
+
+    pendingServicePhotos = [];
+    var photoRow = document.getElementById('servicePhotoRow');
+    var photoInput = document.getElementById('servicePhotoInput');
+    function renderServicePhotoRow() {
+      var chips = pendingServicePhotos.map(function (src, i) {
+        return '<span class="photo-chip"><img src="' + src + '" alt=""><button type="button" data-remove="' + i + '" aria-label="Quitar foto">✕</button></span>';
+      }).join('');
+      photoRow.innerHTML = chips + (pendingServicePhotos.length < MAX_PHOTOS
+        ? '<button type="button" class="photo-add" id="servicePhotoAddBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Agregar</button>'
+        : '');
+      var addBtn = document.getElementById('servicePhotoAddBtn');
+      if (addBtn) addBtn.addEventListener('click', function () { photoInput.click(); });
+    }
+    renderServicePhotoRow();
+    photoRow.addEventListener('click', function (e) {
+      var rm = e.target.closest('[data-remove]');
+      if (rm) { pendingServicePhotos.splice(Number(rm.getAttribute('data-remove')), 1); renderServicePhotoRow(); }
+    });
+    photoInput.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(photoInput.files || []).slice(0, MAX_PHOTOS - pendingServicePhotos.length);
+      var remaining = files.length;
+      if (!remaining) return;
+      files.forEach(function (f) {
+        compressImage(f, function (dataUrl) {
+          if (dataUrl) pendingServicePhotos.push(dataUrl);
+          remaining--;
+          if (remaining === 0) { renderServicePhotoRow(); photoInput.value = ''; }
+        });
+      });
+    });
+
+    document.getElementById('publishServiceForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('publishServiceSubmitBtn');
+      var msgBox = document.getElementById('publishServiceMsg');
+      var priceVal = document.getElementById('s-price').value;
+      var payload = {
+        category: document.getElementById('s-cat').value,
+        title: document.getElementById('s-title').value.trim(),
+        country: document.getElementById('s-country').value,
+        zone: document.getElementById('s-zone').value.trim(),
+        price: priceVal === '' ? null : Number(priceVal),
+        currency: document.getElementById('s-currency').value,
+        phone: document.getElementById('s-phone').value.trim(),
+        description: document.getElementById('s-desc').value.trim(),
+        photos: pendingServicePhotos.slice()
+      };
+      btn.disabled = true;
+      try {
+        await api('POST', '/api/services', payload);
+        showToast('¡Listo! Tu servicio ya está publicado.');
+        renderServicePublishArea();
+        loadServices();
+      } catch (err) {
+        msgBox.innerHTML = '<div class="form-msg err">' + esc(err.message) + '</div>';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    loadMyServices();
+  }
+
+  async function loadMyServices() {
+    try {
+      var data = await api('GET', '/api/services/mine');
+      myServicesCache = data.services;
+      var list = document.getElementById('myServicesList');
+      var empty = document.getElementById('emptyMyServices');
+      if (!list) return;
+      empty.hidden = data.services.length !== 0;
+      list.innerHTML = data.services.map(function (s) {
+        var thumb = s.photos && s.photos[0] ? '<img src="' + s.photos[0] + '" alt="">' : pinIcon();
+        return (
+          '<div class="mini-row">' +
+          '<div class="mini-thumb">' + thumb + '</div>' +
+          '<div class="mini-info"><h4>' + esc(s.title) + '</h4><div class="mini-meta">' +
+          '<span>' + esc(serviceCategoryLabel(s.category)) + '</span>' +
+          (s.price != null ? '<span class="num">' + money(s.price, s.currency) + '</span>' : '<span>Consultar precio</span>') +
+          '<span>' + esc(s.zone) + ', ' + esc(countryLabel(s.country)) + '</span></div></div>' +
+          '<div class="mini-actions">' +
+          '<button class="btn btn-sm btn-ghost" data-open-service="' + s.id + '">Ver</button>' +
+          '<button class="btn btn-sm btn-danger" data-delete-service="' + s.id + '">Eliminar</button>' +
+          '</div></div>'
+        );
+      }).join('');
+      list.onclick = async function (e) {
+        var open = e.target.closest('[data-open-service]');
+        var del = e.target.closest('[data-delete-service]');
+        if (open) { openServiceDetail(Number(open.getAttribute('data-open-service'))); return; }
+        if (del) {
+          try { await api('DELETE', '/api/services/' + del.getAttribute('data-delete-service')); showToast('Servicio eliminado.'); loadMyServices(); loadServices(); } catch (err) { showToast(err.message, 4500); }
+        }
+      };
+    } catch (err) { /* silent */ }
+  }
+
+  var serviceOverlayBg = document.getElementById('serviceOverlayBg');
+  var openServiceId = null;
+  function closeServiceDetail() {
+    if (serviceOverlayBg) serviceOverlayBg.hidden = true;
+    document.body.style.overflow = '';
+    openServiceId = null;
+  }
+  var serviceDialogCloseBtn = document.getElementById('serviceDialogCloseBtn');
+  if (serviceDialogCloseBtn) serviceDialogCloseBtn.addEventListener('click', closeServiceDetail);
+  if (serviceOverlayBg) serviceOverlayBg.addEventListener('click', function (e) { if (e.target === serviceOverlayBg) closeServiceDetail(); });
+
+  async function openServiceDetail(serviceId) {
+    openServiceId = serviceId;
+    if (!serviceOverlayBg) return;
+    serviceOverlayBg.hidden = false;
+    document.body.style.overflow = 'hidden';
+    var s;
+    try {
+      var data = await api('GET', '/api/services/' + serviceId);
+      s = data.service;
+    } catch (err) {
+      closeServiceDetail(); showToast(err.message, 4500); return;
+    }
+    if (openServiceId !== s.id) return;
+    var media = document.getElementById('serviceDialogMedia');
+    var photos = s.photos || [];
+    media.innerHTML = photos.length
+      ? '<img src="' + photos[0] + '" alt="">'
+      : '<svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.3"/></svg>';
+    document.getElementById('serviceDialogTitle').textContent = s.title;
+    document.getElementById('serviceDialogZone').innerHTML = pinIcon() + ' ' + esc(s.zone) + ', ' + esc(countryLabel(s.country)) + '<span class="type-tag">' + esc(serviceCategoryLabel(s.category)) + '</span>';
+    document.getElementById('serviceDialogPrice').textContent = s.price != null ? money(s.price, s.currency) : 'Consultar';
+    document.getElementById('serviceDialogDesc').textContent = s.description;
+    var digits = (s.phone || '').replace(/\D/g, '');
+    var code = CALL_CODE[s.country] || '595';
+    var wa = digits ? ('https://wa.me/' + code + digits.replace(/^0/, '')) : null;
+    document.getElementById('serviceDialogContact').innerHTML =
+      '<span class="phone">' + phoneIcon() + ' ' + esc(s.phone) + '</span>' +
+      (wa ? '<a class="btn btn-sm btn-soft" href="' + wa + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') +
+      '<span style="margin-left:auto; color:var(--ink-faint); font-size:0.8rem;">Publicado por ' + esc(s.ownerLabel || '—') + '</span>';
+  }
+
+  var goServiciosBtn = document.getElementById('goServiciosBtn');
+  if (goServiciosBtn) goServiciosBtn.addEventListener('click', function () { switchTab('servicios'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
   /* ---------------- Mis ofertas ---------------- */
   function bidAuthorLabel(offer, bid, viewerIsBuyer) {
     if (bid.by === 'comprador') return viewerIsBuyer ? 'Vos' : esc(offer.buyerLabel || 'Comprador');
@@ -815,6 +1079,7 @@
       if (!el.overlayBg.hidden) closeDetail();
       if (!el.authOverlay.hidden) closeAuth();
       if (!el.aboutOverlay.hidden) closeAbout();
+      if (serviceOverlayBg && !serviceOverlayBg.hidden) closeServiceDetail();
     }
   });
 
@@ -872,7 +1137,7 @@
     if (openListingId !== l.id) return; // stale
     renderDetailMedia(l);
     document.getElementById('dialogTitle').textContent = l.title;
-    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '<span class="type-tag">' + esc(propertyTypeLabel(l.propertyType)) + '</span>' + (l.featured ? '<span class="featured-tag">' + starIcon() + ' Destacado</span>' : '') + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
+    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '<span class="type-tag">' + esc(propertyTypeLabel(l.propertyType)) + '</span>' + (l.featured ? '<span class="featured-tag">' + starIcon() + ' Destacado</span>' : '') + (l.verified ? '<span class="verified-tag">' + checkIcon() + ' Verificado</span>' : '') + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
     document.getElementById('dialogPrice').textContent = money(l.price, l.currency);
     document.getElementById('dialogDesc').textContent = l.description;
     var cuotasBox = document.getElementById('dialogCuotas');
@@ -904,7 +1169,7 @@
     document.getElementById('dialogContact').innerHTML =
       '<span class="phone">' + phoneIcon() + ' ' + esc(l.phone) + '</span>' +
       (wa ? '<a class="btn btn-sm btn-soft" href="' + wa + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') +
-      '<span style="margin-left:auto; color:var(--ink-faint); font-size:0.8rem;">Publicado por ' + esc(l.ownerLabel || '—') + '</span>';
+      '<span style="margin-left:auto; color:var(--ink-faint); font-size:0.8rem;">Publicado por ' + esc(l.ownerLabel || '—') + (l.ownerIsAgency ? '<span class="agency-tag">Agencia</span>' : '') + '</span>';
 
     renderDialogDM(l);
     await renderDetailAction(l);
@@ -1137,16 +1402,36 @@
 
       var usersData = await api('GET', '/api/admin/users');
       el.adminUsersTable.innerHTML =
-        '<thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Lotes</th><th>Rol</th><th>Alta</th></tr></thead><tbody>' +
+        '<thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Lotes</th><th>Rol</th><th>Agencia</th><th>Alta</th></tr></thead><tbody>' +
         usersData.users.map(function (u) {
-          return '<tr><td>' + esc(u.displayName) + '</td><td>' + esc(u.email) + '</td><td>' + esc(u.phone || '—') + '</td><td class="num">' + u.listingsCount + '</td><td>' + (u.isAdmin ? '<span class="badge admin">Admin</span>' : 'Usuario') + '</td><td>' + timeAgo(u.createdAt) + '</td></tr>';
+          var agencyCell = u.isAgency
+            ? '<span class="agency-tag" style="margin-left:0;">Agencia hasta ' + new Date(u.agencyUntil).toLocaleDateString('es-PY') + '</span> <button class="btn btn-sm btn-ghost" data-agency-clear="' + u.id + '">Quitar</button>'
+            : '<select class="agency-months" data-for="' + u.id + '" style="width:auto; padding:3px 6px; font-size:0.78rem;">' +
+              '<option value="1">1 mes</option><option value="3">3 meses</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="24">24 meses</option></select> ' +
+              '<button class="btn btn-sm btn-soft" data-agency-activate="' + u.id + '">Activar agencia</button>';
+          return '<tr><td>' + esc(u.displayName) + '</td><td>' + esc(u.email) + '</td><td>' + esc(u.phone || '—') + '</td><td class="num">' + u.listingsCount + '</td><td>' + (u.isAdmin ? '<span class="badge admin">Admin</span>' : 'Usuario') + '</td><td style="white-space:nowrap;">' + agencyCell + '</td><td>' + timeAgo(u.createdAt) + '</td></tr>';
         }).join('') + '</tbody>';
+      el.adminUsersTable.onclick = async function (e) {
+        var act = e.target.closest('[data-agency-activate]');
+        var clr = e.target.closest('[data-agency-clear]');
+        if (act) {
+          var uid = act.getAttribute('data-agency-activate');
+          var sel = el.adminUsersTable.querySelector('.agency-months[data-for="' + uid + '"]');
+          var months = Number(sel ? sel.value : 1);
+          try { await api('PATCH', '/api/admin/users/' + uid + '/agency', { months: months }); showToast('Cuenta agencia activada por ' + months + ' meses.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+          return;
+        }
+        if (clr) {
+          try { await api('PATCH', '/api/admin/users/' + clr.getAttribute('data-agency-clear') + '/agency', { clear: true }); showToast('Se quitó la cuenta agencia.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+        }
+      };
 
       var listingsData = await api('GET', '/api/listings?sort=recientes');
       el.adminListings.innerHTML = listingsData.listings.map(function (l) {
         var featuredLine = l.featured
           ? '<span class="featured-tag" style="margin-left:0;">' + starIcon() + ' Destacado hasta ' + new Date(l.featuredUntil).toLocaleDateString('es-PY') + '</span>'
           : '';
+        var verifiedLine = l.verified ? '<span class="verified-tag" style="margin-left:0;">' + checkIcon() + ' Verificado</span>' : '';
         return (
           '<div class="mini-row">' +
           '<div class="mini-thumb">' + (l.photos && l.photos[0] ? '<img src="' + l.photos[0] + '" alt="">' : pinIcon()) + '</div>' +
@@ -1159,6 +1444,11 @@
           '<option value="7">Destacar 7 días</option><option value="15">Destacar 15 días</option><option value="30">Destacar 30 días</option></select>' +
           '<button class="btn btn-sm btn-soft" data-feature="' + l.id + '">Aplicar</button>' +
           (l.featured ? '<button class="btn btn-sm btn-ghost" data-unfeature="' + l.id + '">Quitar destacado</button>' : '') +
+          '</div>' +
+          '<div style="margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' + verifiedLine +
+          (l.verified
+            ? '<button class="btn btn-sm btn-ghost" data-unverify="' + l.id + '">Quitar verificación</button>'
+            : '<button class="btn btn-sm btn-soft" data-verify="' + l.id + '">Marcar como verificado</button>') +
           '</div></div>' +
           '<div class="mini-actions">' +
           '<button class="btn btn-sm btn-ghost" data-open="' + l.id + '">Ver</button>' +
@@ -1171,6 +1461,8 @@
         var del = e.target.closest('[data-admin-delete]');
         var feat = e.target.closest('[data-feature]');
         var unfeat = e.target.closest('[data-unfeature]');
+        var verify = e.target.closest('[data-verify]');
+        var unverify = e.target.closest('[data-unverify]');
         if (open) { openDetail(Number(open.getAttribute('data-open'))); return; }
         if (del) {
           try { await api('DELETE', '/api/listings/' + del.getAttribute('data-admin-delete')); showToast('Lote eliminado.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
@@ -1185,6 +1477,14 @@
         }
         if (unfeat) {
           try { await api('PATCH', '/api/admin/listings/' + unfeat.getAttribute('data-unfeature') + '/feature', { clear: true }); showToast('Se quitó el destacado.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+          return;
+        }
+        if (verify) {
+          try { await api('PATCH', '/api/admin/listings/' + verify.getAttribute('data-verify') + '/verify', { verified: true }); showToast('Publicación marcada como verificada.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
+          return;
+        }
+        if (unverify) {
+          try { await api('PATCH', '/api/admin/listings/' + unverify.getAttribute('data-unverify') + '/verify', { verified: false }); showToast('Se quitó la verificación.'); loadAdmin(); } catch (err) { showToast(err.message, 4500); }
         }
       };
     } catch (err) {

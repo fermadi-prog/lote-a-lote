@@ -271,6 +271,18 @@
   .dm-box{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-top:10px; display:flex; gap:8px; align-items:flex-end; flex-wrap:wrap;}
   .dm-box textarea{flex:1 1 200px; resize:vertical; min-height:40px;}
   .dm-box .dm-label{flex:1 1 100%; font-size:0.78rem; font-weight:500; color:var(--ink-soft);}
+
+  .verified-pill{font-size:0.68rem; font-weight:700; padding:4px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; background:var(--good-soft); color:var(--good); display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px -2px rgba(0,0,0,0.25);}
+  .verified-tag{display:inline-flex; align-items:center; gap:3px; font-size:0.72rem; font-weight:700; color:var(--good); background:var(--good-soft); padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; margin-left:8px; vertical-align:2px;}
+  .agency-tag{display:inline-flex; align-items:center; gap:3px; font-size:0.7rem; font-weight:700; color:var(--accent-strong); background:var(--accent-soft); padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; margin-left:6px; vertical-align:2px;}
+  .service-cat-pill{position:absolute; bottom:10px; left:10px; background:color-mix(in srgb, var(--moss) 82%, transparent); color:#fff; font-size:0.68rem; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em;}
+  .cta-banner{background:linear-gradient(120deg, var(--moss-soft), var(--surface)); border:1px dashed var(--moss); border-radius:var(--radius); padding:18px 20px; margin:0 0 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .cta-banner h3{font-size:1.02rem; margin-bottom:4px;}
+  .cta-banner p{color:var(--ink-soft); font-size:0.86rem; max-width:480px; margin:0;}
+  .cta-banner.small{padding:12px 16px;}
+  .cta-banner.small h3{font-size:0.9rem;}
+  .cta-banner.small p{font-size:0.8rem;}
+
   [hidden]{display:none !important;}
 
   .site-footer{border-top:1px solid var(--line); margin-top:56px; background:var(--surface);}
@@ -304,6 +316,7 @@
     <nav class="tabs" role="tablist" aria-label="Secciones">
       <button role="tab" data-tab="explorar" aria-selected="true">Explorar</button>
       <button role="tab" data-tab="publicar" aria-selected="false">Publicar</button>
+      <button role="tab" data-tab="servicios" aria-selected="false">Servicios</button>
       <button role="tab" data-tab="ofertas" aria-selected="false">Mis ofertas</button>
       <button role="tab" data-tab="mensajes" aria-selected="false">Mensajes<span class="tab-badge" id="msgBadge" hidden>0</span></button>
       <button role="tab" data-tab="admin" aria-selected="false" id="adminTabBtn" hidden>Admin</button>
@@ -345,6 +358,10 @@
       </svg>
     </div>
     <p class="hero-sub">Publicá tu terreno, casa, departamento o estancia y vendelo al contado, seguí cobrando en cuotas y recuperá lo que ya invertiste, o aceptá trueque — un vehículo, otra propiedad, lo que surja. Del lado comprador podés ofertar en efectivo o proponer un cambio.</p>
+    <div class="cta-banner small">
+      <div><h3>¿Sos fotógrafo, dronero o hacés fumigación para el campo?</h3><p>Publicá tu servicio en la nueva sección Servicios y que te encuentren compradores y vendedores.</p></div>
+      <button class="btn btn-sm btn-primary" id="goServiciosBtn">Ver Servicios</button>
+    </div>
     <div class="controls">
       <div class="field grow"><label for="searchInput">Buscar</label><input type="search" id="searchInput" placeholder="Título, zona o descripción"></div>
       <div class="field"><label for="typeFilter">Tipo</label><select id="typeFilter"><option value="">Todos</option></select></div>
@@ -365,6 +382,11 @@
   <!-- ================= PUBLICAR ================= -->
   <section class="view" id="view-publicar" hidden>
     <div id="publicarGate"></div>
+  </section>
+
+  <!-- ================= SERVICIOS ================= -->
+  <section class="view" id="view-servicios" hidden>
+    <div id="serviciosGate"></div>
   </section>
 
   <!-- ================= MIS OFERTAS ================= -->
@@ -405,6 +427,13 @@
       <a href="#" data-footer-tab="publicar">Publicar una propiedad</a>
       <a href="#" data-footer-tab="ofertas">Mis ofertas</a>
       <a href="#" id="aboutLink">Quiénes somos</a>
+    </div>
+    <div class="footer-col">
+      <h4>Servicios</h4>
+      <a href="#" data-footer-tab="servicios">Dron y fotos aéreas</a>
+      <a href="#" data-footer-tab="servicios">Fotografía y video</a>
+      <a href="#" data-footer-tab="servicios">Fumigación (campo)</a>
+      <a href="#" data-footer-tab="servicios">Publicá tu servicio</a>
     </div>
     <div class="footer-col">
       <h4>Países</h4>
@@ -491,6 +520,27 @@
         <p>Lote a Lote es la plataforma que armamos para que esa conexión sea simple: publicar lo que tenés, encontrar lo que buscás, y hablar directo con la otra parte.</p>
         <p>¿Consultas o propuestas comerciales? Escribinos a <a href="mailto:comercial@fermadi.com.py">comercial@fermadi.com.py</a>.</p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SERVICIO (overlay) ================= -->
+<div class="overlay-bg" id="serviceOverlayBg" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="serviceDialogTitle" id="serviceDialogEl">
+    <div class="dialog-head">
+      <div class="dialog-media" id="serviceDialogMedia"></div>
+      <button class="dialog-close" id="serviceDialogCloseBtn" aria-label="Cerrar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-top">
+        <div><h2 id="serviceDialogTitle"></h2><div class="dialog-zone" id="serviceDialogZone"></div></div>
+        <div class="dialog-price num" id="serviceDialogPrice"></div>
+      </div>
+      <p class="dialog-desc" id="serviceDialogDesc"></p>
+      <hr class="divider">
+      <div class="contact-row" id="serviceDialogContact"></div>
     </div>
   </div>
 </div>
