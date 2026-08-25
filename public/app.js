@@ -49,6 +49,11 @@
 
   var ZONES = ["Asunción", "Concepción", "Belén", "Horqueta", "Loreto", "San Carlos", "San Lázaro", "Yvy Ya'ú", "Azotey", "Sgto. José Félix López", "San Alfredo", "Paso Barreto", "San Pedro del Ykuamandiyu", "Antequera", "Choré", "General Elizardo Aquino", "Itacurubí del Rosario", "Lima", "Nueva Germania", "San Estanislao", "San Pablo", "Tacuatí", "Unión", "25 de Diciembre", "Villa del Rosario", "General Resquín", "Yataity del Norte", "Guajayví", "Capiibary", "Santa Rosa del Aguaray", "Yryvu Cuá", "Liberación", "Caacupé", "Altos", "Arroyos y Esteros", "Atyra", "Caraguatay", "Emboscada", "Eusebio Ayala", "Isla Pucú", "Itacurubí de la Cordillera", "Juan de Mena", "Loma Grande", "Mbocayaty del Yhaguy", "Nueva Colombia", "Piribebuy", "Primero de Marzo", "San Bernardino", "Santa Elena", "Tobatí", "Valenzuela", "San José Obrero", "Villarrica", "Borja", "Mauricio José Troche", "Coronel Martínez", "Félix Pérez Cardozo", "General Eugenio A. Garay", "Colonia Independencia", "Itapé", "Iturbe", "José Fassardi", "Mbocayaty", "Natalicio Talavera", "Ñumi", "San Salvador", "Yataity", "Dr. Bottrell", "Paso Yobaí", "Tebicuary", "Coronel Oviedo", "Caaguazú", "Carayao", "Cecilio Báez", "Santa Rosa del Mbutuy", "Dr. Juan Manuel Frutos", "Repatriación", "Nueva Londres", "San Joaquín", "San José de los Arroyos", "Yhú", "J Eulogio Estigarribia", "R.I. 3 Corrales", "Raúl Arsenio Oviedo", "José Domingo Ocampos", "Mcal. Francisco Solano López", "La Pastora", "3 de Febrero", "Simón Bolívar", "Vaquería", "Tembiapora", "Nueva Toledo", "Caazapá", "Abaí", "Buena Vista", "Moisés Bertoni", "General Higinio Morínigo", "Maciel", "San Juan Nepomuceno", "Tavai", "Fulgencio Yegros", "Yutí", "3 de Mayo", "Encarnación", "Bella Vista", "Cambyreta", "Capitán Meza", "Capitán Miranda", "Nueva Alborada", "Carmen del Paraná", "Coronel Bogado", "Carlos Antonio López", "Natalio", "Fram", "General Artigas", "General Delgado", "Hohenau", "Jesús", "Leandro Oviedo", "Obligado", "Mayor Otaño", "San Cosme y Damián", "San Pedro del Paraná", "San Rafael del Paraná", "Trinidad", "Edelira", "Tomás Romero Pereira", "Alto Vera", "La Paz", "Yatytay", "San Juan del Paraná", "Pirapo", "Itapúa Poty", "San Juan Bautista", "Ayolas", "San Ignacio", "San Miguel", "San Patricio", "Santa María", "Santa Rosa", "Santiago", "Villa Florida", "Yabebyry", "Paraguarí", "Acahay", "Caapucú", "General Bernardino Caballero", "Carapeguá", "Escobar", "La Colmena", "Mbuyapey", "Pirayú", "Quiindy", "Quyquyho", "San Roque González", "Sapucaí", "Tebicuary-mí", "Yaguarón", "Ybycuí", "Yvytimí", "Ciudad del Este", "Presidente Franco", "Domingo Martínez de Irala", "Dr. Juan León Mallorquín", "Hernandarias", "Itakyrý", "Juan E. O'Leary", "Ñacunday", "Yguazú", "Los Cedrales", "Minga Guazú", "San Cristóbal", "Santa Rita", "Naranjal", "Santa Rosa del Monday", "Minga Pora", "Mbaracayú", "San Alberto", "Iruña", "Santa Fe del Paraná", "Tavapy", "Dr. Raúl Peña", "Areguá", "Capiatá", "Fernando de la Mora", "Guarambaré", "Itá", "Itauguá", "Lambaré", "Limpio", "Luque", "Mariano Roque Alonso", "Nueva Italia", "Ñemby", "San Antonio", "San Lorenzo", "Villa Elisa", "Villeta", "Ypacaraí", "Ypané", "J Augusto Saldivar", "Pilar", "Alberdi", "Cerrito", "Desmochados", "General Díaz", "Guazú Cuá", "Humaitá", "Isla Umbú", "Los Laureles", "Mayor Martínez", "Paso de Patria", "San Juan Bautista de Ñeembucú", "Tacuaras", "Villa Franca", "Villa Oliva", "Villalbín", "Pedro Juan Caballero", "Capitán Bado", "Zanja Pytá", "Karapay", "Saltos del Guairá", "Corpus Christi", "Curuguaty", "Villa Ygatimí", "Itanara", "Ypé Jhú", "Francisco Caballero Álvarez", "Katuete", "La Paloma", "Nueva Esperanza", "Yasy Kañy", "Ybyrarobana", "Yby Pytá", "Benjamín Aceval", "Puerto Pinasco", "Villa Hayes", "Nanawa", "José Falcón", "Tte 1ro Manuel Irala Fernández", "Tte. Esteban Martínez", "Gral José María Bruguez", "Mariscal Estigarribia", "Filadelfia", "Loma Plata", "Fuerte Olimpo", "Puerto Casado", "Bahía Negra", "Carmelo Peralta"];
   var COUNTRIES = [{ code: 'PY', label: 'Paraguay' }, { code: 'AR', label: 'Argentina' }, { code: 'BR', label: 'Brasil' }, { code: 'UY', label: 'Uruguay' }];
+  var PROPERTY_TYPES = [{ code: 'terreno', label: 'Terreno' }, { code: 'casa', label: 'Casa' }, { code: 'departamento', label: 'Departamento' }, { code: 'estancia', label: 'Estancia' }];
+  function propertyTypeLabel(code) {
+    for (var i = 0; i < PROPERTY_TYPES.length; i++) if (PROPERTY_TYPES[i].code === code) return PROPERTY_TYPES[i].label;
+    return 'Terreno';
+  }
   var ZONE_COORDS = {
     'Asunción': [-25.2637, -57.5759], 'Luque': [-25.2699, -57.4854], 'San Lorenzo': [-25.3400, -57.5081],
     'Ñemby': [-25.3958, -57.5347], 'Capiatá': [-25.3556, -57.4453], 'Itauguá': [-25.3958, -57.3561],
@@ -119,6 +124,7 @@
     banner: document.getElementById('banner'),
     searchInput: document.getElementById('searchInput'),
     countryFilter: document.getElementById('countryFilter'),
+    typeFilter: document.getElementById('typeFilter'),
     zoneFilter: document.getElementById('zoneFilter'),
     sortSelect: document.getElementById('sortSelect'),
     listingGrid: document.getElementById('listingGrid'),
@@ -138,6 +144,9 @@
     dialogContact: document.getElementById('dialogContact'),
     dialogActionArea: document.getElementById('dialogActionArea'),
     authOverlay: document.getElementById('authOverlay'),
+    aboutOverlay: document.getElementById('aboutOverlay'),
+    aboutCloseBtn: document.getElementById('aboutCloseBtn'),
+    aboutLink: document.getElementById('aboutLink'),
     authCloseBtn: document.getElementById('authCloseBtn'),
     authForm: document.getElementById('authForm'),
     authMsg: document.getElementById('authMsg'),
@@ -328,6 +337,10 @@
       el.countryFilter.innerHTML = '<option value="">Todos</option>' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('');
       el.countryFilter.dataset.filled = '1';
     }
+    if (!el.typeFilter.dataset.filled) {
+      el.typeFilter.innerHTML = '<option value="">Todos</option>' + PROPERTY_TYPES.map(function (t) { return '<option value="' + t.code + '">' + esc(t.label) + '</option>'; }).join('');
+      el.typeFilter.dataset.filled = '1';
+    }
   }
 
   async function loadExplorar() {
@@ -335,6 +348,7 @@
     if (el.searchInput.value.trim()) params.set('q', el.searchInput.value.trim());
     if (el.zoneFilter.value) params.set('zone', el.zoneFilter.value);
     if (el.countryFilter.value) params.set('country', el.countryFilter.value);
+    if (el.typeFilter.value) params.set('tipo', el.typeFilter.value);
     if (el.sortSelect.value) params.set('sort', el.sortSelect.value);
     try {
       var data = await api('GET', '/api/listings?' + params.toString());
@@ -351,6 +365,7 @@
   });
   el.zoneFilter.addEventListener('change', loadExplorar);
   el.countryFilter.addEventListener('change', loadExplorar);
+  el.typeFilter.addEventListener('change', loadExplorar);
   el.sortSelect.addEventListener('change', loadExplorar);
   function debounce(fn, ms) { var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); }; }
 
@@ -360,6 +375,7 @@
       ? '<img src="' + photo + '" alt="">'
       : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 3-4 4 6H4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>';
     var statusPill = l.status === 'vendido' ? '<span class="status-pill vendido">Vendido</span>' : '';
+    var typePill = '<span class="type-pill">' + esc(propertyTypeLabel(l.propertyType)) + '</span>';
     var mineTag = l.isMine ? ' · <em>vos</em>' : '';
     var cuotasLine = (l.installmentAmount != null && (l.installmentsPaid != null || l.installmentsLeft != null))
       ? '<div class="card-cuotas">A cuotas: ' + (l.installmentsPaid != null ? l.installmentsPaid : '—') + '/' +
@@ -368,7 +384,7 @@
       : '';
     return (
       '<button class="card" data-open="' + l.id + '">' +
-      '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' + statusPill + '</div>' +
+      '<div class="card-media">' + media + '<span class="zone-pill">' + pinIcon() + ' <span>' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '</span></span>' + statusPill + typePill + '</div>' +
       '<div class="card-body">' +
       '<h3>' + esc(l.title) + '</h3>' +
       '<div class="card-price num">' + money(l.price, l.currency) + '</div>' +
@@ -402,11 +418,12 @@
 
     el.publicarGate.innerHTML =
       '<div class="panel">' +
-      '<h2 style="font-size:1.1rem; margin-bottom:4px;">' + (L2 ? 'Editar publicación' : 'Publicar un terreno') + '</h2>' +
-      '<p class="hint" style="margin-bottom:16px;">' + (L2 ? 'Actualizá los datos de tu lote — los cambios se ven al instante en Explorar.' : 'Contá lo esencial: cuánto pedís, dónde está y cómo te contactan. Podés mencionar el estado de las cuotas en la descripción.') + '</p>' +
+      '<h2 style="font-size:1.1rem; margin-bottom:4px;">' + (L2 ? 'Editar publicación' : 'Publicar una propiedad') + '</h2>' +
+      '<p class="hint" style="margin-bottom:16px;">' + (L2 ? 'Actualizá los datos de tu propiedad — los cambios se ven al instante en Explorar.' : 'Contá lo esencial: qué tipo de propiedad es, cuánto pedís, dónde está y cómo te contactan. Podés mencionar el estado de las cuotas en la descripción.') + '</p>' +
       '<form id="publishForm">' +
       '<div class="form-grid">' +
-      '<div class="field full"><label for="f-title">Título breve</label><input type="text" id="f-title" maxlength="70" placeholder="Ej: Lote de 300 m² en zona residencial" value="' + esc(L2 ? L2.title : '') + '" required></div>' +
+      '<div class="field"><label for="f-type">Tipo de propiedad</label><select id="f-type">' + PROPERTY_TYPES.map(function (t) { return '<option value="' + t.code + '"' + (L2 ? (L2.propertyType === t.code ? ' selected' : '') : (t.code === 'terreno' ? ' selected' : '')) + '>' + esc(t.label) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="f-title">Título breve</label><input type="text" id="f-title" maxlength="70" placeholder="Ej: Casa de 3 dormitorios en zona residencial" value="' + esc(L2 ? L2.title : '') + '" required></div>' +
       '<div class="field"><label for="f-country">País</label><select id="f-country">' + COUNTRIES.map(function (c) { return '<option value="' + c.code + '"' + (L2 && L2.country === c.code ? ' selected' : '') + '>' + esc(c.label) + '</option>'; }).join('') + '</select></div>' +
       '<div class="field"><label for="f-zone">Zona o ciudad</label><input type="text" id="f-zone" list="zoneOptions" placeholder="Ej: Luque" value="' + esc(L2 ? L2.zone : '') + '" required><datalist id="zoneOptions">' + ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('') + '</datalist></div>' +
       '<div class="field full"><label>Ubicación en el mapa (opcional)</label><div class="pick-map" id="pickMap"></div>' +
@@ -426,14 +443,15 @@
       '<div class="field full"><label for="f-desc">Descripción</label><textarea id="f-desc" placeholder="Superficie, cuotas que faltan, loteadora, servicios, referencias del lugar..." required>' + esc(L2 ? L2.description : '') + '</textarea></div>' +
       '<div class="field full"><label>Fotos (hasta 4)</label><div class="photo-row" id="photoRow"></div><input type="file" id="photoInput" accept="image/*" multiple hidden><p class="hint">Se comprimen automáticamente para que la página cargue rápido.</p></div>' +
       (L2
-        ? '<div class="field full"><p class="hint">' + (L2.commissionAcceptedAt ? 'Aceptaste la comisión del 5% sobre la venta al publicar este lote.' : '') + '</p></div>'
-        : '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-accept-terms" required> Acepto que, si vendo este lote a través de Lote a Lote, voy a abonar una comisión del <b>5% sobre el monto final de venta</b>.</label></div>') +
+        ? '<div class="field full"><p class="hint">' + (L2.commissionAcceptedAt ? 'Aceptaste que vas a abonar una comisión del 5% sobre el monto total de la venta cerrada, al publicar esta propiedad.' : '') + '</p></div>'
+        : '<div class="field full"><label class="checkbox-label"><input type="checkbox" id="f-accept-terms" required> Acepto que, si concreto la venta de esta propiedad a través de Lote a Lote, voy a abonar una comisión del <b>5% sobre el monto total de la venta cerrada</b>.</label>' +
+          '<p class="hint" style="margin:2px 0 0 26px;">Esta comisión aplica sobre el precio final acordado con el comprador, no necesariamente sobre el precio publicado acá.</p></div>') +
       '</div>' +
-      '<div style="margin-top:16px; display:flex; gap:10px;"><button type="submit" class="btn btn-primary" id="publishSubmitBtn">' + (L2 ? 'Guardar cambios' : 'Publicar terreno') + '</button>' +
+      '<div style="margin-top:16px; display:flex; gap:10px;"><button type="submit" class="btn btn-primary" id="publishSubmitBtn">' + (L2 ? 'Guardar cambios' : 'Publicar propiedad') + '</button>' +
       (L2 ? '<button type="button" class="btn btn-ghost" id="cancelEditBtn">Cancelar</button>' : '') + '</div>' +
       '<div id="publishMsg"></div>' +
       '</form></div>' +
-      '<div class="my-listings"><h2>Tus publicaciones</h2><div id="myListingsList"></div><div class="empty" id="emptyMyListings" hidden><h3>Todavía no publicaste ningún lote</h3><p>Completá el formulario de arriba para sumarlo a Explorar.</p></div></div>';
+      '<div class="my-listings"><h2>Tus publicaciones</h2><div id="myListingsList"></div><div class="empty" id="emptyMyListings" hidden><h3>Todavía no publicaste ninguna propiedad</h3><p>Completá el formulario de arriba para sumarla a Explorar.</p></div></div>';
 
     var cancelBtn = document.getElementById('cancelEditBtn');
     if (cancelBtn) cancelBtn.addEventListener('click', function () { editingListingId = null; renderPublicarGate(); });
@@ -557,6 +575,7 @@
       var msgBox = document.getElementById('publishMsg');
       var payload = {
         title: document.getElementById('f-title').value.trim(),
+        propertyType: document.getElementById('f-type').value,
         country: document.getElementById('f-country').value,
         zone: document.getElementById('f-zone').value.trim(),
         price: Number(document.getElementById('f-price').value),
@@ -783,8 +802,27 @@
   el.dialogCloseBtn.addEventListener('click', closeDetail);
   el.overlayBg.addEventListener('click', function (e) { if (e.target === el.overlayBg) closeDetail(); });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { if (!el.overlayBg.hidden) closeDetail(); if (!el.authOverlay.hidden) closeAuth(); }
+    if (e.key === 'Escape') {
+      if (!el.overlayBg.hidden) closeDetail();
+      if (!el.authOverlay.hidden) closeAuth();
+      if (!el.aboutOverlay.hidden) closeAbout();
+    }
   });
+
+  /* ---------------- Quiénes somos ---------------- */
+  function openAbout() {
+    el.overlayBg.hidden = true;
+    el.authOverlay.hidden = true;
+    el.aboutOverlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAbout() {
+    el.aboutOverlay.hidden = true;
+    document.body.style.overflow = '';
+  }
+  if (el.aboutLink) el.aboutLink.addEventListener('click', function (e) { e.preventDefault(); openAbout(); });
+  if (el.aboutCloseBtn) el.aboutCloseBtn.addEventListener('click', closeAbout);
+  if (el.aboutOverlay) el.aboutOverlay.addEventListener('click', function (e) { if (e.target === el.aboutOverlay) closeAbout(); });
 
   function renderDetailMedia(l) {
     var photos = l.photos || [];
@@ -825,7 +863,7 @@
     if (openListingId !== l.id) return; // stale
     renderDetailMedia(l);
     document.getElementById('dialogTitle').textContent = l.title;
-    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
+    document.getElementById('dialogZone').innerHTML = pinIcon() + ' ' + esc(l.zone) + ', ' + esc(countryLabel(l.country)) + '<span class="type-tag">' + esc(propertyTypeLabel(l.propertyType)) + '</span>' + (l.status === 'vendido' ? ' · <span class="badge vendido" style="margin-left:4px;">Vendido</span>' : '');
     document.getElementById('dialogPrice').textContent = money(l.price, l.currency);
     document.getElementById('dialogDesc').textContent = l.description;
     var cuotasBox = document.getElementById('dialogCuotas');
@@ -919,7 +957,7 @@
         '<div class="offer-form">' +
         '<div class="field" style="flex:0 0 140px;"><label for="dOfferType">Tipo de oferta</label><select id="dOfferType"><option value="efectivo">Efectivo</option><option value="trueque">Trueque</option></select></div>' +
         '<div class="field" id="dOfferAmountField"><label for="dOfferAmount">Tu oferta (' + currLabel + ')</label><input type="number" id="dOfferAmount" min="0" placeholder="' + Math.round(l.price * 0.9) + '"></div>' +
-        '<div class="field" id="dOfferDescField" style="flex:1 1 200px;" hidden><label for="dOfferDesc">¿Qué ofrecés a cambio?</label><input type="text" id="dOfferDesc" placeholder="Ej: Toyota Hilux 2015, u otro terreno"></div>' +
+        '<div class="field" id="dOfferDescField" style="flex:1 1 200px;" hidden><label for="dOfferDesc">¿Qué ofrecés a cambio?</label><input type="text" id="dOfferDesc" placeholder="Ej: Toyota Hilux 2015, u otra propiedad"></div>' +
         '<div class="field" style="flex:2 1 200px;"><label for="dOfferMsg">Mensaje (opcional)</label><input type="text" id="dOfferMsg" placeholder="Contale al vendedor tu propuesta"></div>' +
         '<button class="btn btn-primary" id="dOfferSend" ' + (l.status === 'vendido' ? 'disabled' : '') + '>Ofertar</button>' +
         '</div>';
