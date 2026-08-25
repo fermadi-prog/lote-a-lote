@@ -283,6 +283,25 @@
   .cta-banner.small h3{font-size:0.9rem;}
   .cta-banner.small p{font-size:0.8rem;}
 
+  .side-rail{display:none; position:fixed; top:150px; right:max(16px, calc(50% - 816px)); width:264px; flex-direction:column; gap:14px; z-index:5; max-height:calc(100vh - 170px); overflow-y:auto; padding-bottom:8px;}
+  @media (min-width:1700px){ .side-rail:not([hidden]){display:flex;} }
+  .side-widget{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow);}
+  .side-widget h4{font-size:0.82rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .side-widget p{font-size:0.82rem; color:var(--ink-soft); line-height:1.5; margin:0;}
+  .side-widget .rate{font-size:1.3rem; font-weight:700; color:var(--accent-strong); font-family:"IBM Plex Mono", monospace;}
+  .side-widget .rate-note{font-size:0.72rem; color:var(--ink-faint); margin-top:2px;}
+  .side-widget-list{display:flex; flex-direction:column; gap:8px;}
+  .side-widget-row{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.82rem; padding:6px 0; border-bottom:1px solid var(--line);}
+  .side-widget-row:last-child{border-bottom:none; padding-bottom:0;}
+  .side-widget-row button{background:none; border:none; padding:0; text-align:left; cursor:pointer; color:var(--ink); font:inherit;}
+  .side-widget-row button:hover{color:var(--accent-strong); text-decoration:underline;}
+  .side-widget-row .amt{font-family:"IBM Plex Mono", monospace; color:var(--moss); font-weight:600; white-space:nowrap;}
+  .side-steps{display:flex; flex-direction:column; gap:10px; margin:0; padding:0; list-style:none;}
+  .side-steps li{display:flex; gap:8px; font-size:0.82rem; color:var(--ink-soft); line-height:1.4;}
+  .side-steps .n{flex:none; width:20px; height:20px; border-radius:50%; background:var(--moss-soft); color:var(--moss); font-weight:700; font-size:0.74rem; display:flex; align-items:center; justify-content:center;}
+  .side-widget .btn{width:100%; margin-top:8px;}
+  .side-widget-empty{font-size:0.8rem; color:var(--ink-faint);}
+
   [hidden]{display:none !important;}
 
   .site-footer{border-top:1px solid var(--line); margin-top:56px; background:var(--surface);}
@@ -407,8 +426,23 @@
     <div class="admin-scroll" style="margin-bottom:24px;"><table class="admin-table" id="adminUsersTable"></table></div>
     <h3 style="font-size:0.95rem; margin-bottom:10px;">Todos los lotes</h3>
     <div id="adminListings"></div>
+    <h3 style="font-size:0.95rem; margin:24px 0 10px;">Precios de referencia por m² (panel lateral)</h3>
+    <p class="hint" style="margin-bottom:10px;">Estos valores se muestran en el costado de la página como referencia para compradores. Cargalos a mano — no se calculan de las publicaciones.</p>
+    <div class="panel" style="padding:16px; margin-bottom:16px;">
+      <form id="zonePriceForm" class="form-grid">
+        <div class="field"><label for="zp-zone">Zona</label><input type="text" id="zp-zone" list="zoneOptionsAdmin" placeholder="Ej: Luque" required><datalist id="zoneOptionsAdmin"></datalist></div>
+        <div class="field"><label for="zp-country">País</label><select id="zp-country"></select></div>
+        <div class="field"><label for="zp-price">Precio por m²</label><input type="number" id="zp-price" min="0" step="1" placeholder="120" required></div>
+        <div class="field"><label for="zp-currency">Moneda</label><select id="zp-currency"><option value="USD">USD</option><option value="PYG">Gs.</option></select></div>
+        <div class="field full"><label for="zp-note">Nota (opcional)</label><input type="text" id="zp-note" placeholder="Ej: zona residencial, sobre asfalto"></div>
+        <div class="field full"><button type="submit" class="btn btn-sm btn-primary">Agregar valor de referencia</button></div>
+      </form>
+    </div>
+    <div id="adminZonePrices"></div>
   </section>
 </div>
+
+<aside class="side-rail" id="sideRail" hidden></aside>
 
 <footer class="site-footer">
   <div class="footer-inner">
@@ -419,7 +453,7 @@
         </span>
         <div class="brand-text"><h1 style="font-size:1.05rem;">Lote a Lote</h1></div>
       </div>
-      <p>Marketplace de propiedades: terrenos, casas, departamentos y estancias, al contado, a cuotas o en trueque. Publicá o ofertá por la que te interese, sin intermediarios.</p>
+      <p>Marketplace de propiedades: terrenos, casas, departamentos y estancias, al contado, a cuotas o en trueque. Publicá o ofertá por la que te interese, y negociá directo con la otra parte.</p>
     </div>
     <div class="footer-col">
       <h4>Explorar</h4>
@@ -516,7 +550,7 @@
       </div>
       <div style="display:flex; flex-direction:column; gap:12px; font-size:0.92rem; color:var(--ink-soft); line-height:1.55;">
         <p>Somos un grupo de personas enfocado en dar soluciones al rubro inmobiliario en Paraguay y la región.</p>
-        <p>Conectamos directamente a propietarios que quieren vender — al contado, a cuotas o en trueque — con compradores interesados, sin intermediarios de por medio. Cada quien negocia, ofrece y cierra el trato a su manera.</p>
+        <p>Conectamos a propietarios que quieren vender — al contado, a cuotas o en trueque — con compradores interesados. Cada quien negocia, ofrece y cierra el trato a su manera.</p>
         <p>Lote a Lote es la plataforma que armamos para que esa conexión sea simple: publicar lo que tenés, encontrar lo que buscás, y hablar directo con la otra parte.</p>
         <p>¿Consultas o propuestas comerciales? Escribinos a <a href="mailto:comercial@fermadi.com.py">comercial@fermadi.com.py</a>.</p>
       </div>

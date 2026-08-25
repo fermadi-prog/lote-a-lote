@@ -153,6 +153,8 @@
     adminStats: document.getElementById('adminStats'),
     adminUsersTable: document.getElementById('adminUsersTable'),
     adminListings: document.getElementById('adminListings'),
+    adminZonePrices: document.getElementById('adminZonePrices'),
+    sideRail: document.getElementById('sideRail'),
     overlayBg: document.getElementById('overlayBg'),
     dialogMedia: document.getElementById('dialogMedia'),
     dialogCloseBtn: document.getElementById('dialogCloseBtn'),
@@ -209,6 +211,7 @@
       btn.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     Object.keys(el.views).forEach(function (k) { el.views[k].hidden = (k !== tab); });
+    renderSideRail(tab);
     renderCurrentTab();
   }
   el.tabs.forEach(function (btn) {
@@ -376,6 +379,7 @@
       fillFilterSelects();
       el.emptyExplorar.hidden = listingsCache.length !== 0;
       el.listingGrid.innerHTML = listingsCache.map(cardHtml).join('');
+      if (currentTab === 'explorar') renderSideRail('explorar');
     } catch (err) {
       showBanner('No se pudieron cargar los lotes: ' + err.message, true);
     }
@@ -1490,9 +1494,152 @@
     } catch (err) {
       showBanner('No se pudo cargar el panel de administración: ' + err.message, true);
     }
+    loadAdminZonePrices();
   }
   function tile(n, label) {
     return '<div class="stat-tile"><div class="n num">' + n + '</div><div class="l">' + esc(label) + '</div></div>';
+  }
+
+  /* ---------------- Admin: precios de referencia por m² ---------------- */
+  (function initZonePriceForm() {
+    var countrySel = document.getElementById('zp-country');
+    var zoneList = document.getElementById('zoneOptionsAdmin');
+    if (!countrySel || !zoneList) return;
+    countrySel.innerHTML = COUNTRIES.map(function (c) { return '<option value="' + c.code + '">' + esc(c.label) + '</option>'; }).join('');
+    zoneList.innerHTML = ZONES.map(function (z) { return '<option value="' + esc(z) + '">'; }).join('');
+    document.getElementById('zonePriceForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var payload = {
+        zone: document.getElementById('zp-zone').value.trim(),
+        country: document.getElementById('zp-country').value,
+        pricePerM2: Number(document.getElementById('zp-price').value),
+        currency: document.getElementById('zp-currency').value,
+        note: document.getElementById('zp-note').value.trim()
+      };
+      try {
+        await api('POST', '/api/zone-prices', payload);
+        document.getElementById('zonePriceForm').reset();
+        showToast('Valor de referencia agregado.');
+        loadAdminZonePrices();
+      } catch (err) { showToast(err.message, 4500); }
+    });
+  })();
+
+  async function loadAdminZonePrices() {
+    if (!el.adminZonePrices) return;
+    try {
+      var data = await api('GET', '/api/zone-prices');
+      if (!data.zonePrices.length) {
+        el.adminZonePrices.innerHTML = '<p class="hint">Todavía no cargaste ningún valor de referencia.</p>';
+        return;
+      }
+      el.adminZonePrices.innerHTML = data.zonePrices.map(function (z) {
+        return (
+          '<div class="mini-row">' +
+          '<div class="mini-info"><h4>' + esc(z.zone) + ', ' + esc(countryLabel(z.country)) + '</h4>' +
+          '<div class="mini-meta"><span class="num">' + money(z.pricePerM2, z.currency) + '/m²</span>' +
+          (z.note ? '<span>' + esc(z.note) + '</span>' : '') + '</div></div>' +
+          '<div class="mini-actions"><button class="btn btn-sm btn-danger" data-delete-zp="' + z.id + '">Eliminar</button></div>' +
+          '</div>'
+        );
+      }).join('');
+      el.adminZonePrices.onclick = async function (e) {
+        var del = e.target.closest('[data-delete-zp]');
+        if (!del) return;
+        try { await api('DELETE', '/api/zone-prices/' + del.getAttribute('data-delete-zp')); showToast('Valor eliminado.'); loadAdminZonePrices(); } catch (err) { showToast(err.message, 4500); }
+      };
+    } catch (err) { /* silent */ }
+  }
+
+  /* ---------------- Panel lateral (costados) ---------------- */
+  var exchangeRateCache = null; // { pygPerUsd } | 'error' | null (not fetched yet)
+  function fetchExchangeRate() {
+    if (exchangeRateCache) return Promise.resolve(exchangeRateCache);
+    return fetch('https://open.er-api.com/v6/latest/USD')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        exchangeRateCache = (data && data.rates && data.rates.PYG) ? { pygPerUsd: data.rates.PYG } : 'error';
+        return exchangeRateCache;
+      })
+      .catch(function () { exchangeRateCache = 'error'; return exchangeRateCache; });
+  }
+  function renderRateWidget() {
+    var box = document.getElementById('rateWidget');
+    if (!box) return;
+    fetchExchangeRate().then(function (rate) {
+      box = document.getElementById('rateWidget');
+      if (!box) return;
+      if (rate === 'error') {
+        box.innerHTML = '<h4>Cotización del día</h4><p class="side-widget-empty">No se pudo cargar la cotización ahora mismo.</p>';
+        return;
+      }
+      box.innerHTML = '<h4>Cotización del día</h4><div class="rate">1 USD ≈ ' + numFmt.format(Math.round(rate.pygPerUsd)) + ' Gs.</div><p class="rate-note">Referencial · fuente externa</p>';
+    });
+  }
+  async function renderZonePricesWidget() {
+    var box = document.getElementById('zonePricesWidget');
+    if (!box) return;
+    try {
+      var data = await api('GET', '/api/zone-prices');
+      box = document.getElementById('zonePricesWidget');
+      if (!box) return;
+      if (!data.zonePrices.length) {
+        box.innerHTML = '<h4>Precio de referencia por m²</h4><p class="side-widget-empty">Todavía no hay valores cargados.</p>';
+        return;
+      }
+      box.innerHTML = '<h4>Precio de referencia por m²</h4><div class="side-widget-list">' +
+        data.zonePrices.slice(0, 6).map(function (z) {
+          return '<div class="side-widget-row"><button type="button" data-zp-zone="' + esc(z.zone) + '">' + esc(z.zone) + '</button><span class="amt">' + money(z.pricePerM2, z.currency) + '/m²</span></div>';
+        }).join('') + '</div>';
+      box.querySelectorAll('[data-zp-zone]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          el.zoneFilter.value = btn.getAttribute('data-zp-zone');
+          switchTab('explorar');
+        });
+      });
+    } catch (err) {
+      box = document.getElementById('zonePricesWidget');
+      if (box) box.innerHTML = '<h4>Precio de referencia por m²</h4><p class="side-widget-empty">No se pudo cargar.</p>';
+    }
+  }
+  function renderSideRail(tab) {
+    if (!el.sideRail) return;
+    if (tab !== 'explorar' && tab !== 'servicios') { el.sideRail.hidden = true; return; }
+    el.sideRail.hidden = false;
+
+    var widgets = '';
+    if (tab === 'explorar') {
+      var featured = listingsCache.filter(function (l) { return l.featured; }).slice(0, 3);
+      widgets += '<div class="side-widget"><h4>' + starIcon() + ' Destacados</h4>' +
+        (featured.length
+          ? '<div class="side-widget-list">' + featured.map(function (l) {
+              return '<div class="side-widget-row"><button type="button" data-side-open="' + l.id + '">' + esc(l.title) + '</button><span class="amt">' + money(l.price, l.currency) + '</span></div>';
+            }).join('') + '</div>'
+          : '<p class="side-widget-empty">Todavía no hay publicaciones destacadas.</p>') + '</div>';
+      widgets += '<div class="side-widget"><h4>¿Ofrecés un servicio?</h4><p>Dron, fotografía, video o fumigación — publicalo en la sección Servicios.</p><button type="button" class="btn btn-sm btn-soft" id="sideGoServicios">Ver Servicios</button></div>';
+    }
+    if (tab === 'servicios') {
+      widgets += '<div class="side-widget"><h4>¿Buscás una propiedad?</h4><p>Mirá los terrenos, casas, departamentos y estancias publicados en Explorar.</p><button type="button" class="btn btn-sm btn-soft" id="sideGoExplorar">Ver Explorar</button></div>';
+    }
+    widgets += '<div class="side-widget" id="rateWidget"><h4>Cotización del día</h4><p class="side-widget-empty">Cargando…</p></div>';
+    if (tab === 'explorar') widgets += '<div class="side-widget" id="zonePricesWidget"><h4>Precio de referencia por m²</h4><p class="side-widget-empty">Cargando…</p></div>';
+    widgets += '<div class="side-widget"><h4>Cómo funciona</h4><ol class="side-steps">' +
+      '<li><span class="n">1</span>Publicás tu propiedad o servicio, gratis.</li>' +
+      '<li><span class="n">2</span>Te contactan, ofertás o te ofertan — vos elegís.</li>' +
+      '<li><span class="n">3</span>Cerrás el trato directo con la otra parte.</li></ol></div>';
+    widgets += '<div class="side-widget"><h4>Antes de comprar</h4><p>Revisá el estado de la cuenta catastral del inmueble en el sitio oficial.</p><a class="btn btn-sm btn-ghost" href="https://www.catastro.gov.py/servicio-linea/#!/consulta-publica/cuentas-corrientes" target="_blank" rel="noopener">Consultar catastro →</a></div>';
+
+    el.sideRail.innerHTML = widgets;
+    el.sideRail.querySelectorAll('[data-side-open]').forEach(function (b) {
+      b.addEventListener('click', function () { openDetail(Number(b.getAttribute('data-side-open'))); });
+    });
+    var goServ = document.getElementById('sideGoServicios');
+    if (goServ) goServ.addEventListener('click', function () { switchTab('servicios'); });
+    var goExp = document.getElementById('sideGoExplorar');
+    if (goExp) goExp.addEventListener('click', function () { switchTab('explorar'); });
+
+    renderRateWidget();
+    if (tab === 'explorar') renderZonePricesWidget();
   }
 
   /* ---------------- Init ---------------- */
