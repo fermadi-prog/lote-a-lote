@@ -4,7 +4,7 @@ const { requireAuth } = require('../auth');
 
 const router = express.Router();
 const COUNTRIES = ['PY', 'AR', 'BR', 'UY'];
-const MAX_PHOTOS = 2;
+const MAX_PHOTOS = 4;
 const MAX_PHOTO_CHARS = 400000; // ~400KB of base64 per photo, generous ceiling for a compressed jpeg
 
 function serialize(row, viewerId) {
@@ -26,6 +26,10 @@ function serialize(row, viewerId) {
     installmentsPaid: row.installments_paid != null ? Number(row.installments_paid) : null,
     installmentsLeft: row.installments_left != null ? Number(row.installments_left) : null,
     installmentAmount: row.installment_amount != null ? Number(row.installment_amount) : null,
+    totalPaid: row.total_paid != null ? Number(row.total_paid) : null,
+    purchaseStartDate: row.purchase_start_date
+      ? (row.purchase_start_date instanceof Date ? row.purchase_start_date.toISOString().slice(0, 10) : row.purchase_start_date)
+      : null,
     createdAt: row.created_at,
     isMine: viewerId ? row.owner_id === viewerId : false
   };
@@ -103,6 +107,12 @@ router.post('/', requireAuth, async (req, res) => {
   const installmentsPaid = positiveIntOrNull(b.installmentsPaid);
   const installmentsLeft = positiveIntOrNull(b.installmentsLeft);
   const installmentAmount = positiveNumOrNull(b.installmentAmount);
+  const totalPaid = positiveNumOrNull(b.totalPaid);
+  let purchaseStartDate = null;
+  if (b.purchaseStartDate && /^\d{4}-\d{2}-\d{2}$/.test(b.purchaseStartDate)) {
+    const d = new Date(b.purchaseStartDate + 'T00:00:00Z');
+    if (!Number.isNaN(d.getTime())) purchaseStartDate = b.purchaseStartDate;
+  }
 
   if (!title || !zone || !description || !phone || !(price > 0)) {
     return res.status(400).json({ error: 'datos_incompletos', message: 'Completá título, zona, precio, teléfono y descripción.' });
@@ -114,9 +124,9 @@ router.post('/', requireAuth, async (req, res) => {
   }
 
   const { rows } = await pool.query(
-    `INSERT INTO listings (owner_id, title, country, zone, price, currency, phone, description, photos, lat, lng, installments_paid, installments_left, installment_amount)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
-    [req.user.id, title, country, zone, price, currency, phone, description, JSON.stringify(photos), lat, lng, installmentsPaid, installmentsLeft, installmentAmount]
+    `INSERT INTO listings (owner_id, title, country, zone, price, currency, phone, description, photos, lat, lng, installments_paid, installments_left, installment_amount, total_paid, purchase_start_date)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,
+    [req.user.id, title, country, zone, price, currency, phone, description, JSON.stringify(photos), lat, lng, installmentsPaid, installmentsLeft, installmentAmount, totalPaid, purchaseStartDate]
   );
   res.status(201).json({ listing: serialize({ ...rows[0], owner_label: req.user.display_name }, req.user.id) });
 });
